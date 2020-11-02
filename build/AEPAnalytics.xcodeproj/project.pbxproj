@@ -1,3 +1,4 @@
+
 // !$*UTF8*$!
 {
 	archiveVersion = 1;
@@ -210,7 +211,8 @@
 				ACD9B599254EA3E600F3FFB0 /* LaunchScreen.storyboard */,
 				ACD9B59C254EA3E600F3FFB0 /* Info.plist */,
 			);
-			path = AEPAnalyticsTestApp;
+			name = AEPAnalyticsTestApp;
+			path = ../test/AEPAnalyticsTestApp;
 			sourceTree = "<group>";
 		};
 		CEBDCEF550A14091A479F5C5 /* Frameworks */ = {
