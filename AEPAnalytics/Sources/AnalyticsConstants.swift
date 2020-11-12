@@ -18,6 +18,38 @@ enum AnalyticsConstants {
     static let EXTENSION_VERSION = "0.0.1"
     static let DATASTORE_NAME = EXTENSION_NAME
 
+    static let APP_STATE_FOREGROUND = "foreground"
+    static let APP_STATE_BACKGROUND = "background"
+
+    static let ACTION_PREFIX = "AMACTION:"
+    static let INTERNAL_ACTION_PREFIX = "ADBINTERNAL:"
+    static let VAR_ESCAPE_PREFIX = "&&"
+    static let IGNORE_PAGE_NAME_VALUE = "lnk_o"
+    static let CHARSET = "UTF-8"
+
+    enum SharedStateKeys {
+        static let CONFIGURATION = "com.adobe.module.configuration"
+    }
+
+    enum Configuration {
+        static let GLOBAL_CONFIG_PRIVACY = "global.privacy"
+    }
+
+    enum AnalyticsRequestKeys {
+        static let VISITOR_ID = "vid"
+        static let CHARSET = "ce"
+        static let FORMATTED_TIMESTAMP = "t"
+        static let STRING_TIMESTAMP = "ts"
+        static let CONTEXT_DATA = "c"
+        static let PAGE_NAME = "pageName"
+        static let IGNORE_PAGE_NAME = "pe"
+        static let CUSTOMER_PERSPECTIVE = "cp"
+        static let ACTION_NAME = "pev2"
+        static let ANALYTICS_ID = "aid"
+        static let PRIVACY_MODE = "a.privacy.mode"
+
+    }
+
     enum EventDataKeys {
         static let FORCE_KICK_HITS  = "forcekick"
         static let CLEAR_HITS_QUEUE = "clearhitsqueue"
@@ -39,4 +71,18 @@ enum AnalyticsConstants {
         static let HIT_HOST = "hitHost"
         static let HIT_URL = "hitUrl"
     }
+
+    enum ContextDataKeys {
+        static let ACTION_KEY = "a.action"
+        static let INTERNAL_ACTION_KEY = "a.internalaction"
+    }
+
+    enum XDMDataKeys {
+        static let LEGACY = "_legacy"
+        static let ANALYTICS = "analytics"
+        static let EVENTTYPE = "eventType"
+        static let CONTEXT_DATA = "c"
+    }
+
+    static let ANALYTICS_XDM_EVENTTYPE = "legacy.analytics"
 }
