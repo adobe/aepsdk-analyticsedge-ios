@@ -47,6 +47,9 @@ playground.xcworkspace
 .swiftpm
 
 .build/
+build/ios.xcarchive
+build/AEPAnalytics.xcframework
+build/ios_simulator.xcarchive
 
 # CocoaPods
 #
