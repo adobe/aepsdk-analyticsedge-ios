@@ -1,2 +1,2 @@
 --rules indent
---exclude Pods,Generated
+--exclude build/Pods,Generated
