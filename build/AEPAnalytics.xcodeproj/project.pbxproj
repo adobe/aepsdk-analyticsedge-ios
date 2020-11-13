@@ -1,4 +1,3 @@
-
 // !$*UTF8*$!
 {
 	archiveVersion = 1;
@@ -9,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1A7295419CBCE9C63B14AD50 /* Pods_AEPAnalyticsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F121879C03B25BCA80C16E9A /* Pods_AEPAnalyticsTests.framework */; };
+		415760ED77E7E376C68CAE2E /* Pods_AEPAnalyticsTestApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D40ACA949029874E1AC3E2A2 /* Pods_AEPAnalyticsTestApp.framework */; };
 		9C207EE33A08559BCDE053C8 /* Pods_AEPAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5165BE1E1EFE07A358896E6 /* Pods_AEPAnalytics.framework */; };
-		A54CA622106F443A3CDB56D9 /* Pods_AEPAnalyticsTestApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D40ACA949029874E1AC3E2A2 /* Pods_AEPAnalyticsTestApp.framework */; };
 		ACA7727025428940005880AF /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA7726425428940005880AF /* Analytics.swift */; };
 		ACA7727125428940005880AF /* AnalyticsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA7726525428940005880AF /* AnalyticsConstants.swift */; };
 		ACA7727225428940005880AF /* AEPAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = ACA7726625428940005880AF /* AEPAnalytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -18,12 +17,12 @@
 		ACA7727C25428959005880AF /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA7725E25428940005880AF /* TestableExtensionRuntime.swift */; };
 		ACA7728325428963005880AF /* EventHub+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA7726025428940005880AF /* EventHub+Test.swift */; };
 		ACA7728625428966005880AF /* MockExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA7726125428940005880AF /* MockExtension.swift */; };
-		ACD9B58F254EA3E500F3FFB0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD9B58E254EA3E500F3FFB0 /* AppDelegate.swift */; };
-		ACD9B591254EA3E500F3FFB0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD9B590254EA3E500F3FFB0 /* SceneDelegate.swift */; };
-		ACD9B593254EA3E500F3FFB0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD9B592254EA3E500F3FFB0 /* ViewController.swift */; };
-		ACD9B596254EA3E500F3FFB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACD9B594254EA3E500F3FFB0 /* Main.storyboard */; };
-		ACD9B598254EA3E600F3FFB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACD9B597254EA3E600F3FFB0 /* Assets.xcassets */; };
-		ACD9B59B254EA3E600F3FFB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACD9B599254EA3E600F3FFB0 /* LaunchScreen.storyboard */; };
+		ACA9C443255C8A5500D722B4 /* AnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA9C437255C88EE00D722B4 /* AnalyticsTests.swift */; };
+		ACA9C470255CAA0400D722B4 /* AnalyticsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA9C46F255CAA0400D722B4 /* AnalyticsHelper.swift */; };
+		ACE96EB225510E59007AF366 /* AEPAnalyticsTestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE96EB125510E59007AF366 /* AEPAnalyticsTestApp.swift */; };
+		ACE96EB425510E59007AF366 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE96EB325510E59007AF366 /* ContentView.swift */; };
+		ACE96EB625510E5C007AF366 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACE96EB525510E5C007AF366 /* Assets.xcassets */; };
+		ACE96EB925510E5C007AF366 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACE96EB825510E5C007AF366 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,7 +33,7 @@
 			remoteGlobalIDString = 2EBEE76F2525A35300880E72;
 			remoteInfo = AEPAnalytics;
 		};
-		ACD9B5B0254EA54B00F3FFB0 /* PBXContainerItemProxy */ = {
+		ACE96ED3255112EC007AF366 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2EBEE7672525A35300880E72 /* Project object */;
 			proxyType = 1;
@@ -68,14 +67,14 @@
 		ACA772D325428BFE005880AF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		ACA772D425428BFE005880AF /* AEPAnalyticsEdge.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = AEPAnalyticsEdge.podspec; path = ../AEPAnalyticsEdge.podspec; sourceTree = "<group>"; };
 		ACA772D525428BFE005880AF /* CODE_OF_CONDUCT.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CODE_OF_CONDUCT.md; path = ../CODE_OF_CONDUCT.md; sourceTree = "<group>"; };
-		ACD9B58C254EA3E500F3FFB0 /* AEPAnalyticsTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AEPAnalyticsTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		ACD9B58E254EA3E500F3FFB0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../../test/AEPAnalyticsTestApp/AppDelegate.swift; sourceTree = "<group>"; };
-		ACD9B590254EA3E500F3FFB0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = ../../test/AEPAnalyticsTestApp/SceneDelegate.swift; sourceTree = "<group>"; };
-		ACD9B592254EA3E500F3FFB0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = ../../test/AEPAnalyticsTestApp/ViewController.swift; sourceTree = "<group>"; };
-		ACD9B595254EA3E500F3FFB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		ACD9B597254EA3E600F3FFB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../test/AEPAnalyticsTestApp/Assets.xcassets; sourceTree = "<group>"; };
-		ACD9B59A254EA3E600F3FFB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		ACD9B59C254EA3E600F3FFB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../test/AEPAnalyticsTestApp/Info.plist; sourceTree = "<group>"; };
+		ACA9C437255C88EE00D722B4 /* AnalyticsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsTests.swift; sourceTree = "<group>"; };
+		ACA9C46F255CAA0400D722B4 /* AnalyticsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHelper.swift; sourceTree = "<group>"; };
+		ACE96EAF25510E59007AF366 /* AEPAnalyticsTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AEPAnalyticsTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ACE96EB125510E59007AF366 /* AEPAnalyticsTestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPAnalyticsTestApp.swift; sourceTree = "<group>"; };
+		ACE96EB325510E59007AF366 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		ACE96EB525510E5C007AF366 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		ACE96EB825510E5C007AF366 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		ACE96EBA25510E5C007AF366 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B5165BE1E1EFE07A358896E6 /* Pods_AEPAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D40ACA949029874E1AC3E2A2 /* Pods_AEPAnalyticsTestApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPAnalyticsTestApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F121879C03B25BCA80C16E9A /* Pods_AEPAnalyticsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPAnalyticsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,11 +98,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ACD9B589254EA3E500F3FFB0 /* Frameworks */ = {
+		ACE96EAC25510E59007AF366 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A54CA622106F443A3CDB56D9 /* Pods_AEPAnalyticsTestApp.framework in Frameworks */,
+				415760ED77E7E376C68CAE2E /* Pods_AEPAnalyticsTestApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,7 +132,7 @@
 				ACA772D125428BFD005880AF /* Makefile */,
 				ACA772D325428BFE005880AF /* README.md */,
 				ACA7725825428940005880AF /* AEPAnalytics */,
-				ACD9B58D254EA3E500F3FFB0 /* AEPAnalyticsTestApp */,
+				ACE96EB025510E59007AF366 /* AEPAnalyticsTestApp */,
 				2EBEE7712525A35400880E72 /* Products */,
 				CEBDCEF550A14091A479F5C5 /* Frameworks */,
 				13AC300B194721A7FF402F99 /* Pods */,
@@ -145,7 +144,7 @@
 			children = (
 				2EBEE7702525A35400880E72 /* AEPAnalytics.framework */,
 				2EBEE7792525A35400880E72 /* AEPAnalyticsTests.xctest */,
-				ACD9B58C254EA3E500F3FFB0 /* AEPAnalyticsTestApp.app */,
+				ACE96EAF25510E59007AF366 /* AEPAnalyticsTestApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -172,6 +171,7 @@
 		ACA7725B25428940005880AF /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				ACA9C437255C88EE00D722B4 /* AnalyticsTests.swift */,
 				ACA7725D25428940005880AF /* TestHelper */,
 				ACA7726225428940005880AF /* Info.plist */,
 			);
@@ -193,6 +193,7 @@
 			children = (
 				ACA7726625428940005880AF /* AEPAnalytics.h */,
 				ACA7726425428940005880AF /* Analytics.swift */,
+				ACA9C46F255CAA0400D722B4 /* AnalyticsHelper.swift */,
 				ACA7726525428940005880AF /* AnalyticsConstants.swift */,
 				ACA7726725428940005880AF /* Analytics+PublicAPI.swift */,
 				ACA7726825428940005880AF /* Info.plist */,
@@ -200,19 +201,25 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		ACD9B58D254EA3E500F3FFB0 /* AEPAnalyticsTestApp */ = {
+		ACE96EB025510E59007AF366 /* AEPAnalyticsTestApp */ = {
 			isa = PBXGroup;
 			children = (
-				ACD9B58E254EA3E500F3FFB0 /* AppDelegate.swift */,
-				ACD9B590254EA3E500F3FFB0 /* SceneDelegate.swift */,
-				ACD9B592254EA3E500F3FFB0 /* ViewController.swift */,
-				ACD9B594254EA3E500F3FFB0 /* Main.storyboard */,
-				ACD9B597254EA3E600F3FFB0 /* Assets.xcassets */,
-				ACD9B599254EA3E600F3FFB0 /* LaunchScreen.storyboard */,
-				ACD9B59C254EA3E600F3FFB0 /* Info.plist */,
+				ACE96EB125510E59007AF366 /* AEPAnalyticsTestApp.swift */,
+				ACE96EB325510E59007AF366 /* ContentView.swift */,
+				ACE96EB525510E5C007AF366 /* Assets.xcassets */,
+				ACE96EBA25510E5C007AF366 /* Info.plist */,
+				ACE96EB725510E5C007AF366 /* Preview Content */,
 			);
 			name = AEPAnalyticsTestApp;
 			path = ../test/AEPAnalyticsTestApp;
+			sourceTree = "<group>";
+		};
+		ACE96EB725510E5C007AF366 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				ACE96EB825510E5C007AF366 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		CEBDCEF550A14091A479F5C5 /* Frameworks */ = {
@@ -280,24 +287,24 @@
 			productReference = 2EBEE7792525A35400880E72 /* AEPAnalyticsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		ACD9B58B254EA3E500F3FFB0 /* AEPAnalyticsTestApp */ = {
+		ACE96EAE25510E59007AF366 /* AEPAnalyticsTestApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = ACD9B59D254EA3E600F3FFB0 /* Build configuration list for PBXNativeTarget "AEPAnalyticsTestApp" */;
+			buildConfigurationList = ACE96EBB25510E5C007AF366 /* Build configuration list for PBXNativeTarget "AEPAnalyticsTestApp" */;
 			buildPhases = (
-				3835372F68C4E4A30F02AED8 /* [CP] Check Pods Manifest.lock */,
-				ACD9B588254EA3E500F3FFB0 /* Sources */,
-				ACD9B589254EA3E500F3FFB0 /* Frameworks */,
-				ACD9B58A254EA3E500F3FFB0 /* Resources */,
-				07DC264FE4C3433A19E25C40 /* [CP] Embed Pods Frameworks */,
+				AC229ACBDC8426B7D7F96924 /* [CP] Check Pods Manifest.lock */,
+				ACE96EAB25510E59007AF366 /* Sources */,
+				ACE96EAC25510E59007AF366 /* Frameworks */,
+				ACE96EAD25510E59007AF366 /* Resources */,
+				8FA6E1214F61E09C5450E919 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				ACD9B5B1254EA54B00F3FFB0 /* PBXTargetDependency */,
+				ACE96ED4255112EC007AF366 /* PBXTargetDependency */,
 			);
 			name = AEPAnalyticsTestApp;
 			productName = AEPAnalyticsTestApp;
-			productReference = ACD9B58C254EA3E500F3FFB0 /* AEPAnalyticsTestApp.app */;
+			productReference = ACE96EAF25510E59007AF366 /* AEPAnalyticsTestApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -317,7 +324,7 @@
 						CreatedOnToolsVersion = 12.0.1;
 						LastSwiftMigration = 1200;
 					};
-					ACD9B58B254EA3E500F3FFB0 = {
+					ACE96EAE25510E59007AF366 = {
 						CreatedOnToolsVersion = 12.1;
 					};
 				};
@@ -337,7 +344,7 @@
 			targets = (
 				2EBEE76F2525A35300880E72 /* AEPAnalytics */,
 				2EBEE7782525A35400880E72 /* AEPAnalyticsTests */,
-				ACD9B58B254EA3E500F3FFB0 /* AEPAnalyticsTestApp */,
+				ACE96EAE25510E59007AF366 /* AEPAnalyticsTestApp */,
 			);
 		};
 /* End PBXProject section */
@@ -357,58 +364,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ACD9B58A254EA3E500F3FFB0 /* Resources */ = {
+		ACE96EAD25510E59007AF366 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACD9B59B254EA3E600F3FFB0 /* LaunchScreen.storyboard in Resources */,
-				ACD9B598254EA3E600F3FFB0 /* Assets.xcassets in Resources */,
-				ACD9B596254EA3E500F3FFB0 /* Main.storyboard in Resources */,
+				ACE96EB925510E5C007AF366 /* Preview Assets.xcassets in Resources */,
+				ACE96EB625510E5C007AF366 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		07DC264FE4C3433A19E25C40 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPAnalyticsTestApp/Pods-AEPAnalyticsTestApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPAnalyticsTestApp/Pods-AEPAnalyticsTestApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPAnalyticsTestApp/Pods-AEPAnalyticsTestApp-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3835372F68C4E4A30F02AED8 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AEPAnalyticsTestApp-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		7BADA1E3AEC120C185B8F80D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -442,6 +409,45 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-AEPAnalytics-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8FA6E1214F61E09C5450E919 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AEPAnalyticsTestApp/Pods-AEPAnalyticsTestApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AEPAnalyticsTestApp/Pods-AEPAnalyticsTestApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPAnalyticsTestApp/Pods-AEPAnalyticsTestApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AC229ACBDC8426B7D7F96924 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AEPAnalyticsTestApp-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -494,6 +500,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACA9C470255CAA0400D722B4 /* AnalyticsHelper.swift in Sources */,
 				ACA7727025428940005880AF /* Analytics.swift in Sources */,
 				ACA7727325428940005880AF /* Analytics+PublicAPI.swift in Sources */,
 				ACA7727125428940005880AF /* AnalyticsConstants.swift in Sources */,
@@ -506,17 +513,17 @@
 			files = (
 				ACA7727C25428959005880AF /* TestableExtensionRuntime.swift in Sources */,
 				ACA7728325428963005880AF /* EventHub+Test.swift in Sources */,
+				ACA9C443255C8A5500D722B4 /* AnalyticsTests.swift in Sources */,
 				ACA7728625428966005880AF /* MockExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ACD9B588254EA3E500F3FFB0 /* Sources */ = {
+		ACE96EAB25510E59007AF366 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACD9B593254EA3E500F3FFB0 /* ViewController.swift in Sources */,
-				ACD9B58F254EA3E500F3FFB0 /* AppDelegate.swift in Sources */,
-				ACD9B591254EA3E500F3FFB0 /* SceneDelegate.swift in Sources */,
+				ACE96EB425510E59007AF366 /* ContentView.swift in Sources */,
+				ACE96EB225510E59007AF366 /* AEPAnalyticsTestApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -528,33 +535,12 @@
 			target = 2EBEE76F2525A35300880E72 /* AEPAnalytics */;
 			targetProxy = 2EBEE77B2525A35400880E72 /* PBXContainerItemProxy */;
 		};
-		ACD9B5B1254EA54B00F3FFB0 /* PBXTargetDependency */ = {
+		ACE96ED4255112EC007AF366 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2EBEE76F2525A35300880E72 /* AEPAnalytics */;
-			targetProxy = ACD9B5B0254EA54B00F3FFB0 /* PBXContainerItemProxy */;
+			targetProxy = ACE96ED3255112EC007AF366 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		ACD9B594254EA3E500F3FFB0 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				ACD9B595254EA3E500F3FFB0 /* Base */,
-			);
-			name = Main.storyboard;
-			path = ../../test/AEPAnalyticsTestApp;
-			sourceTree = "<group>";
-		};
-		ACD9B599254EA3E600F3FFB0 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				ACD9B59A254EA3E600F3FFB0 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			path = ../../test/AEPAnalyticsTestApp;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		2EBEE7822525A35400880E72 /* Debug */ = {
@@ -789,15 +775,17 @@
 			};
 			name = Release;
 		};
-		ACD9B59E254EA3E600F3FFB0 /* Debug */ = {
+		ACE96EBC25510E5C007AF366 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2A5629BC3E4FCF10F811B7A4 /* Pods-AEPAnalyticsTestApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"../test/AEPAnalyticsTestApp/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ../test/AEPAnalyticsTestApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -809,15 +797,17 @@
 			};
 			name = Debug;
 		};
-		ACD9B59F254EA3E600F3FFB0 /* Release */ = {
+		ACE96EBD25510E5C007AF366 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 49681A3E1703998749541F68 /* Pods-AEPAnalyticsTestApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"../test/AEPAnalyticsTestApp/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ../test/AEPAnalyticsTestApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -859,11 +849,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		ACD9B59D254EA3E600F3FFB0 /* Build configuration list for PBXNativeTarget "AEPAnalyticsTestApp" */ = {
+		ACE96EBB25510E5C007AF366 /* Build configuration list for PBXNativeTarget "AEPAnalyticsTestApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				ACD9B59E254EA3E600F3FFB0 /* Debug */,
-				ACD9B59F254EA3E600F3FFB0 /* Release */,
+				ACE96EBC25510E5C007AF366 /* Debug */,
+				ACE96EBD25510E5C007AF366 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
