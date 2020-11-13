@@ -154,7 +154,7 @@ public class Analytics: NSObject, Extension {
         legacyAnalyticsData[AnalyticsConstants.XDMDataKeys.CONTEXT_DATA] = contextData
 
         let xdm = [AnalyticsConstants.XDMDataKeys.EVENTTYPE: AnalyticsConstants.ANALYTICS_XDM_EVENTTYPE]
-        let edgeEventData: [String: Any] = [AnalyticsConstants.XDMDataKeys.LEGACY: [[AnalyticsConstants.XDMDataKeys.ANALYTICS: legacyAnalyticsData]]]
+        let edgeEventData: [String: Any] = [AnalyticsConstants.XDMDataKeys.LEGACY: [AnalyticsConstants.XDMDataKeys.ANALYTICS: legacyAnalyticsData]]
 
         let experienceEvent = ExperienceEvent(xdm: xdm, data: edgeEventData)
         Edge.sendEvent(experienceEvent: experienceEvent, responseHandler: nil)
