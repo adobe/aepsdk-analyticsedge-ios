@@ -18,6 +18,10 @@ enum AnalyticsConstants {
     static let EXTENSION_VERSION = "0.0.1"
     static let DATASTORE_NAME = EXTENSION_NAME
 
+    enum Default {
+        static let TIMEOUT = TimeInterval(2000)
+    }
+
     enum EventDataKeys {
         static let FORCE_KICK_HITS  = "forcekick"
         static let CLEAR_HITS_QUEUE = "clearhitsqueue"

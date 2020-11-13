@@ -1,4 +1,3 @@
-
 // !$*UTF8*$!
 {
 	archiveVersion = 1;
@@ -9,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1A7295419CBCE9C63B14AD50 /* Pods_AEPAnalyticsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F121879C03B25BCA80C16E9A /* Pods_AEPAnalyticsTests.framework */; };
+		2E0B153F255E0BB8001B5CC3 /* AnalyticsHit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B153E255E0BB8001B5CC3 /* AnalyticsHit.swift */; };
+		2E0B1544255E0BCE001B5CC3 /* AnalyticsHitProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B1543255E0BCE001B5CC3 /* AnalyticsHitProcessor.swift */; };
+		2E0B1549255E0C2F001B5CC3 /* MockNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B1548255E0C2F001B5CC3 /* MockNetworking.swift */; };
+		2E0B154E255E0C4B001B5CC3 /* AnalyticsHitProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B154D255E0C4B001B5CC3 /* AnalyticsHitProcessorTests.swift */; };
 		9C207EE33A08559BCDE053C8 /* Pods_AEPAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5165BE1E1EFE07A358896E6 /* Pods_AEPAnalytics.framework */; };
 		A54CA622106F443A3CDB56D9 /* Pods_AEPAnalyticsTestApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D40ACA949029874E1AC3E2A2 /* Pods_AEPAnalyticsTestApp.framework */; };
 		ACA7727025428940005880AF /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA7726425428940005880AF /* Analytics.swift */; };
@@ -45,6 +48,10 @@
 
 /* Begin PBXFileReference section */
 		2A5629BC3E4FCF10F811B7A4 /* Pods-AEPAnalyticsTestApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAnalyticsTestApp.debug.xcconfig"; path = "Target Support Files/Pods-AEPAnalyticsTestApp/Pods-AEPAnalyticsTestApp.debug.xcconfig"; sourceTree = "<group>"; };
+		2E0B153E255E0BB8001B5CC3 /* AnalyticsHit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHit.swift; sourceTree = "<group>"; };
+		2E0B1543255E0BCE001B5CC3 /* AnalyticsHitProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHitProcessor.swift; sourceTree = "<group>"; };
+		2E0B1548255E0C2F001B5CC3 /* MockNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworking.swift; sourceTree = "<group>"; };
+		2E0B154D255E0C4B001B5CC3 /* AnalyticsHitProcessorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHitProcessorTests.swift; sourceTree = "<group>"; };
 		2E0B4C04252BA10800ABBE57 /* AEPCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AEPCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EBEE7702525A35400880E72 /* AEPAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AEPAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EBEE7792525A35400880E72 /* AEPAnalyticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AEPAnalyticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +181,7 @@
 			children = (
 				ACA7725D25428940005880AF /* TestHelper */,
 				ACA7726225428940005880AF /* Info.plist */,
+				2E0B154D255E0C4B001B5CC3 /* AnalyticsHitProcessorTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -184,6 +192,7 @@
 				ACA7725E25428940005880AF /* TestableExtensionRuntime.swift */,
 				ACA7726025428940005880AF /* EventHub+Test.swift */,
 				ACA7726125428940005880AF /* MockExtension.swift */,
+				2E0B1548255E0C2F001B5CC3 /* MockNetworking.swift */,
 			);
 			path = TestHelper;
 			sourceTree = "<group>";
@@ -196,6 +205,8 @@
 				ACA7726525428940005880AF /* AnalyticsConstants.swift */,
 				ACA7726725428940005880AF /* Analytics+PublicAPI.swift */,
 				ACA7726825428940005880AF /* Info.plist */,
+				2E0B153E255E0BB8001B5CC3 /* AnalyticsHit.swift */,
+				2E0B1543255E0BCE001B5CC3 /* AnalyticsHitProcessor.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -495,7 +506,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				ACA7727025428940005880AF /* Analytics.swift in Sources */,
+				2E0B1544255E0BCE001B5CC3 /* AnalyticsHitProcessor.swift in Sources */,
 				ACA7727325428940005880AF /* Analytics+PublicAPI.swift in Sources */,
+				2E0B153F255E0BB8001B5CC3 /* AnalyticsHit.swift in Sources */,
 				ACA7727125428940005880AF /* AnalyticsConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -505,6 +518,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				ACA7727C25428959005880AF /* TestableExtensionRuntime.swift in Sources */,
+				2E0B154E255E0C4B001B5CC3 /* AnalyticsHitProcessorTests.swift in Sources */,
+				2E0B1549255E0C2F001B5CC3 /* MockNetworking.swift in Sources */,
 				ACA7728325428963005880AF /* EventHub+Test.swift in Sources */,
 				ACA7728625428966005880AF /* MockExtension.swift in Sources */,
 			);
