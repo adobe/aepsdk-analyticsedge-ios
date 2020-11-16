@@ -41,7 +41,8 @@ enum AnalyticsConstants {
         static let FORMATTED_TIMESTAMP = "t"
         static let STRING_TIMESTAMP = "ts"
         static let CONTEXT_DATA = "c"
-        static let PAGE_NAME = "pageName"
+        // Todo :- Check why "pageName" instead of "gn" is not mapped correctly ??
+        static let PAGE_NAME = "gn"
         static let IGNORE_PAGE_NAME = "pe"
         static let CUSTOMER_PERSPECTIVE = "cp"
         static let ACTION_NAME = "pev2"
