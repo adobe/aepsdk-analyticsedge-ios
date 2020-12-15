@@ -27,11 +27,13 @@ enum AnalyticsConstants {
     static let IGNORE_PAGE_NAME_VALUE = "lnk_o"
     static let CHARSET = "UTF-8"
 
-    enum SharedStateKeys {
-        static let CONFIGURATION = "com.adobe.module.configuration"
+    enum Assurance {
+        static let SHARED_STATE_NAME =  "com.adobe.assurance"
+        static let SESSION_ID = "sessionid"
     }
 
     enum Configuration {
+        static let SHARED_STATE_NAME = "com.adobe.module.configuration"
         static let GLOBAL_CONFIG_PRIVACY = "global.privacy"
     }
 
@@ -68,7 +70,6 @@ enum AnalyticsConstants {
         static let ETAG_HEADER = "ETag"
         static let SERVER_HEADER = "Server"
         static let CONTENT_TYPE_HEADER = "Content-Type"
-        static let REQUEST_EVENT_IDENTIFIER = "requestEventIdentifier"
         static let HIT_HOST = "hitHost"
         static let HIT_URL = "hitUrl"
     }
@@ -76,6 +77,7 @@ enum AnalyticsConstants {
     enum ContextDataKeys {
         static let ACTION_KEY = "a.action"
         static let INTERNAL_ACTION_KEY = "a.internalaction"
+        static let EVENT_IDENTIFIER_KEY = "a.DebugEventIdentifier"
     }
 
     enum XDMDataKeys {

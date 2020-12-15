@@ -43,7 +43,7 @@ public class Analytics: NSObject, Extension {
     }
 
     public func readyForEvent(_ event: Event) -> Bool {
-        return getSharedState(extensionName: AnalyticsConstants.SharedStateKeys.CONFIGURATION, event: event)?.status == .set
+        return getSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: event)?.status == .set
     }
 
     // MARK: Event Listeners
@@ -132,6 +132,10 @@ public class Analytics: NSObject, Extension {
             ret[AnalyticsConstants.AnalyticsRequestKeys.PRIVACY_MODE] = "unknown"
         }
 
+        if isAssuranceSessionActive(event: event) {
+            ret[AnalyticsConstants.ContextDataKeys.EVENT_IDENTIFIER_KEY] = event.id.uuidString
+        }
+
         return ret
     }
 
@@ -170,10 +174,20 @@ public class Analytics: NSObject, Extension {
     }
 
     private func getPrivacyStatus(event: Event) -> PrivacyStatus {
-        guard let configSharedState = getSharedState(extensionName: AnalyticsConstants.SharedStateKeys.CONFIGURATION, event: event)?.value else { return .unknown
+        guard let configSharedState = getSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: event)?.value else { return .unknown
         }
 
         let privacyStatusStr = configSharedState[AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String ?? ""
         return PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
     }
+
+    private func isAssuranceSessionActive(event: Event) -> Bool {
+        guard let assuranceSharedState = getSharedState(extensionName: AnalyticsConstants.Assurance.SHARED_STATE_NAME, event: event)?.value else {
+            return false
+        }
+
+        let sessionId = assuranceSharedState[AnalyticsConstants.Assurance.SESSION_ID] as? String ?? ""
+        return !sessionId.isEmpty
+    }
 }
+
