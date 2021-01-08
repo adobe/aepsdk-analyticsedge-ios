@@ -85,7 +85,10 @@ enum AnalyticsConstants {
         static let ANALYTICS = "analytics"
         static let EVENTTYPE = "eventType"
         static let CONTEXT_DATA = "c"
+        static let DATA = "data"
+        static let XDM = "xdm"        
     }
 
     static let ANALYTICS_XDM_EVENTTYPE = "legacy.analytics"
+    static let ANALYTICS_XDM_EVENTNAME = "Analytics Edge Request"
 }

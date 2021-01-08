@@ -13,7 +13,6 @@
 import AEPCore
 import AEPServices
 import Foundation
-import AEPEdge
 
 /// Analytics extension for the Adobe Experience Platform SDK
 @objc(AEPMobileAnalytics)
@@ -118,7 +117,7 @@ public class Analytics: NSObject, Extension {
 
         return ret
     }
-    
+
     /// Build analytics context data from track event data
     /// - Parameter event: an event containing track data for processing
     /// - Returns: Returns dictionary containing analytics context data
@@ -174,19 +173,24 @@ public class Analytics: NSObject, Extension {
         let xdm = [AnalyticsConstants.XDMDataKeys.EVENTTYPE: AnalyticsConstants.ANALYTICS_XDM_EVENTTYPE]
         let edgeEventData: [String: Any] = [AnalyticsConstants.XDMDataKeys.LEGACY: [AnalyticsConstants.XDMDataKeys.ANALYTICS: legacyAnalyticsData]]
 
-        let experienceEvent = ExperienceEvent(xdm: xdm, data: edgeEventData)
-        Edge.sendEvent(experienceEvent: experienceEvent, responseHandler: nil)
+        let edgeEvent = Event(name: AnalyticsConstants.ANALYTICS_XDM_EVENTNAME,
+                              type: EventType.edge,
+                              source: EventSource.requestContent,
+                              data: [AnalyticsConstants.XDMDataKeys.XDM: xdm,
+                                     AnalyticsConstants.XDMDataKeys.DATA: edgeEventData]
+        )
+        dispatch(event: edgeEvent)        
     }
 
     private func getActionKey(isInternalAction: Bool) -> String {
         return isInternalAction ? AnalyticsConstants.ContextDataKeys.INTERNAL_ACTION_KEY :
             AnalyticsConstants.ContextDataKeys.ACTION_KEY
     }
-    
+
     private func getActionPrefix(isInternalAction: Bool) -> String {
         return isInternalAction ? AnalyticsConstants.INTERNAL_ACTION_PREFIX : AnalyticsConstants.ACTION_PREFIX
     }
-    
+
     /// Returns the privacy status from configuration shared state w.r.t the event
     /// - Parameter event: An event to get configuration shared state
     /// - Returns : Returns privacy status w.r.t the event
