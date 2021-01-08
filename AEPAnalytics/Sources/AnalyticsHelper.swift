@@ -15,7 +15,7 @@ import AEPServices
 
 class AnalyticsHelper {
     /// The app’s current state, or that of its most active scene.
-    /// - Return: The app's current state
+    /// - Returns: The app's current state
     static func getApplicationState() -> UIApplication.State? {
         var ret: UIApplication.State?
 
