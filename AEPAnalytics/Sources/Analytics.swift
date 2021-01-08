@@ -29,19 +29,24 @@ public class Analytics: NSObject, Extension {
 
     // MARK: Extension
 
+    /// Initializes the Analytics extension and it's dependencies
     public required init(runtime: ExtensionRuntime) {
         self.runtime = runtime
         super.init()
     }
 
+    /// Invoked when the Analytics extension has been registered by the `EventHub`
     public func onRegistered() {
         registerListener(type: EventType.genericTrack, source: EventSource.requestContent, listener: handleAnalyticsRequest)
     }
 
+    /// Invoked when the Analytics extension has been unregistered by the `EventHub`, currently a no-op.
     public func onUnregistered() {
         Log.trace(label: LOG_TAG, "Extension unregistered from MobileCore: \(AnalyticsConstants.FRIENDLY_NAME)")
     }
 
+    /// Analytics extension is ready for an `Event` once configuration shared state is available
+    /// - Parameter event: an `Event`
     public func readyForEvent(_ event: Event) -> Bool {
         return getSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: event)?.status == .set
     }
@@ -60,7 +65,7 @@ public class Analytics: NSObject, Extension {
         track(event: event)
     }
 
-    /// Process
+    /// Process analytics track request
     /// - Parameter event: an event containing track data for processing
     private func track(event: Event) {
         if getPrivacyStatus(event: event) == .optedOut {
@@ -72,6 +77,9 @@ public class Analytics: NSObject, Extension {
         sendAnalyticsHit(analyticsVars: analyticsVars, analyticsData: analyticsData)
     }
 
+    /// Build analytics vars from track event data
+    /// - Parameter event: an event containing track data for processing
+    /// - Returns: Returns dictionary containing analytics vars
     private func processAnalyticsVars(event: Event) -> [String: String] {
         var ret = [String: String]()
 
@@ -110,7 +118,10 @@ public class Analytics: NSObject, Extension {
 
         return ret
     }
-
+    
+    /// Build analytics context data from track event data
+    /// - Parameter event: an event containing track data for processing
+    /// - Returns: Returns dictionary containing analytics context data
     private func processAnalyticsData(event: Event) -> [String: String] {
         var ret = [String: String]()
 
@@ -139,6 +150,9 @@ public class Analytics: NSObject, Extension {
         return ret
     }
 
+    /// Constructs and sends legacy analytics XDM event
+    /// - Parameter analyticsVars: a dictionary containing analytics vars
+    /// - Parameter analyticsData: a dictionary containing analytics data
     private func sendAnalyticsHit(analyticsVars: [String: String], analyticsData: [String: String]) {
         var legacyAnalyticsData: [String: Any] = analyticsVars
         var contextData = [String: String]()
@@ -168,11 +182,14 @@ public class Analytics: NSObject, Extension {
         return isInternalAction ? AnalyticsConstants.ContextDataKeys.INTERNAL_ACTION_KEY :
             AnalyticsConstants.ContextDataKeys.ACTION_KEY
     }
-
+    
     private func getActionPrefix(isInternalAction: Bool) -> String {
         return isInternalAction ? AnalyticsConstants.INTERNAL_ACTION_PREFIX : AnalyticsConstants.ACTION_PREFIX
     }
-
+    
+    /// Returns the privacy status from configuration shared state w.r.t the event
+    /// - Parameter event: An event to get configuration shared state
+    /// - Returns : Returns privacy status w.r.t the event
     private func getPrivacyStatus(event: Event) -> PrivacyStatus {
         guard let configSharedState = getSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: event)?.value else { return .unknown
         }
@@ -181,6 +198,9 @@ public class Analytics: NSObject, Extension {
         return PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
     }
 
+    /// Returns if assurance session is active
+    /// - Parameter event: An event to get assurance shared state
+    /// - Returns : Returns if assurance session is active
     private func isAssuranceSessionActive(event: Event) -> Bool {
         guard let assuranceSharedState = getSharedState(extensionName: AnalyticsConstants.Assurance.SHARED_STATE_NAME, event: event)?.value else {
             return false
@@ -190,4 +210,3 @@ public class Analytics: NSObject, Extension {
         return !sessionId.isEmpty
     }
 }
-
