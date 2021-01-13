@@ -42,9 +42,8 @@ enum AnalyticsConstants {
         static let CHARSET = "ce"
         static let FORMATTED_TIMESTAMP = "t"
         static let STRING_TIMESTAMP = "ts"
-        static let CONTEXT_DATA = "c"
-        // Todo :- Check why "pageName" instead of "gn" is not mapped correctly ??
-        static let PAGE_NAME = "gn"
+        static let CONTEXT_DATA = "c"        
+        static let PAGE_NAME = "pageName"
         static let IGNORE_PAGE_NAME = "pe"
         static let CUSTOMER_PERSPECTIVE = "cp"
         static let ACTION_NAME = "pev2"
@@ -86,7 +85,7 @@ enum AnalyticsConstants {
         static let EVENTTYPE = "eventType"
         static let CONTEXT_DATA = "c"
         static let DATA = "data"
-        static let XDM = "xdm"        
+        static let XDM = "xdm"
     }
 
     static let ANALYTICS_XDM_EVENTTYPE = "legacy.analytics"
