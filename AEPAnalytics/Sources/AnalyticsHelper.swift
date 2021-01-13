@@ -18,8 +18,12 @@ class AnalyticsHelper {
     /// - Returns: The app's current state
     static func getApplicationState() -> UIApplication.State? {
         var ret: UIApplication.State?
-        DispatchQueue.main.sync {
+        if Thread.isMainThread {
             ret = UIApplication.shared.applicationState
+        } else {
+            DispatchQueue.main.sync {
+                ret = UIApplication.shared.applicationState
+            }
         }
         return ret
     }

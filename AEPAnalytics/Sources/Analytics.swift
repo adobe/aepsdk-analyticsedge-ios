@@ -69,6 +69,7 @@ public class Analytics: NSObject, Extension {
     private func track(event: Event) {
         if getPrivacyStatus(event: event) == .optedOut {
             Log.warning(label: LOG_TAG, "track - Dropping track request (Privacy is opted out).")
+            return
         }
 
         let analyticsVars = processAnalyticsVars(event: event)
@@ -170,8 +171,14 @@ public class Analytics: NSObject, Extension {
         }
         legacyAnalyticsData[AnalyticsConstants.XDMDataKeys.CONTEXT_DATA] = contextData
 
-        let xdm = [AnalyticsConstants.XDMDataKeys.EVENTTYPE: AnalyticsConstants.ANALYTICS_XDM_EVENTTYPE]
-        let edgeEventData: [String: Any] = [AnalyticsConstants.XDMDataKeys.LEGACY: [AnalyticsConstants.XDMDataKeys.ANALYTICS: legacyAnalyticsData]]
+        let xdm = [
+            AnalyticsConstants.XDMDataKeys.EVENTTYPE: AnalyticsConstants.ANALYTICS_XDM_EVENTTYPE
+        ]
+        let edgeEventData: [String: Any] = [
+            AnalyticsConstants.XDMDataKeys.LEGACY: [
+                AnalyticsConstants.XDMDataKeys.ANALYTICS: legacyAnalyticsData
+            ]
+        ]
 
         let edgeEvent = Event(name: AnalyticsConstants.ANALYTICS_XDM_EVENTNAME,
                               type: EventType.edge,
@@ -179,7 +186,7 @@ public class Analytics: NSObject, Extension {
                               data: [AnalyticsConstants.XDMDataKeys.XDM: xdm,
                                      AnalyticsConstants.XDMDataKeys.DATA: edgeEventData]
         )
-        dispatch(event: edgeEvent)        
+        dispatch(event: edgeEvent)
     }
 
     private func getActionKey(isInternalAction: Bool) -> String {
