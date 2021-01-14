@@ -15,17 +15,16 @@ import AEPServices
 
 class AnalyticsHelper {
     /// The app’s current state, or that of its most active scene.
-    /// - Return: The app's current state
+    /// - Returns: The app's current state
     static func getApplicationState() -> UIApplication.State? {
         var ret: UIApplication.State?
-
-        let semaphore = DispatchSemaphore(value: 0)
-        DispatchQueue.main.async {
+        if Thread.isMainThread {
             ret = UIApplication.shared.applicationState
-            semaphore.signal()
+        } else {
+            DispatchQueue.main.sync {
+                ret = UIApplication.shared.applicationState
+            }
         }
-        // 5 second timeout
-        _ = semaphore.wait(timeout: .now() + .seconds(5))
         return ret
     }
 }
@@ -33,7 +32,7 @@ class AnalyticsHelper {
 extension TimeZone {
     /// Creates timestamp string, with all fields set as 0 except timezone offset.
     /// All fields other than timezone offset are set to 0 because backend only process timezone offset from this value.
-    /// - Return: `String` Time stamp with all fields except timezone offset set to 0.
+    /// - Returns: `String` Time stamp with all fields except timezone offset set to 0.
     func getOffsetFromGmtInMinutes() -> String {
 
         let gmtOffsetInMinutes = (secondsFromGMT() / 60) * -1
