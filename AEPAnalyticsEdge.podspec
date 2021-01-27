@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "AEPAnalyticsEdge"
-  s.version          = "1.0.0-beta.1"
+  s.version          = "1.0.0-beta.2"
   s.summary          = "Analytics Edge extension for Adobe Experience Platform Mobile SDK. Written and maintained by Adobe."
   s.description      = <<-DESC
                         The Analytics Edge extension enables sending analytics requests to the Adobe Experience Edge from a mobile device using the v5 Adobe Experience Platform SDK.
