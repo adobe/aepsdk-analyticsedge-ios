@@ -18,6 +18,10 @@ jobs:
 
     steps:
       - checkout
+      
+      - run:
+          name: Set Ruby Version
+          command:  echo "ruby-2.4" > ~/.ruby-version
 
        # restore pods related caches
       - restore_cache:
