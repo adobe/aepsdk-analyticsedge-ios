@@ -14,15 +14,11 @@ jobs:
 
   build-and-test:
     macos:
-      xcode: 11.1.0 # Specify the Xcode version to use
+      xcode: 11.6.0 # Specify the Xcode version to use
 
     steps:
       - checkout
       
-      - run:
-          name: Set Ruby Version
-          command:  echo "ruby-2.4" > ~/.ruby-version
-
        # restore pods related caches
       - restore_cache:
           keys:
