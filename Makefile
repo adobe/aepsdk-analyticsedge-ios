@@ -18,6 +18,9 @@ pod-repo-update:
 pod-install:
 	(cd build && pod install --repo-update)
 
+ci-pod-install:
+	(cd build && bundle exec pod install --repo-update)	
+
 pod-update: pod-repo-update
 	(cd build && pod update)
 

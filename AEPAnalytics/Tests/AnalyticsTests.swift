@@ -13,22 +13,231 @@
 import XCTest
 import AEPServices
 @testable import AEPCore
-
 @testable import AEPAnalytics
 
 class AnalyticsAPITests: XCTestCase {
+    var mockRuntime: TestableExtensionRuntime!
+    var analytics: Analytics!
+
     override func setUp() {
-        EventHub.reset()
-        MockExtension.reset()
+        mockRuntime = TestableExtensionRuntime()
+        analytics = Analytics(runtime: mockRuntime)
+        analytics.onRegistered()
     }
 
-    private func registerMockExtension<T: Extension>(_ type: T.Type) {
-        let semaphore = DispatchSemaphore(value: 0)
-        EventHub.shared.registerExtension(type) { error in
-            XCTAssertNil(error)
-            semaphore.signal()
+    func testTrackState() {
+        // test
+        let trackData: [String: Any] = [
+            CoreConstants.Keys.STATE : "state",
+            CoreConstants.Keys.CONTEXT_DATA : [
+                "key1": "value1",
+                "key2": "value2"
+            ]
+        ]
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
+
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.optedIn.rawValue], .set)
+        )
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 1)
+        let edgeEvent = mockRuntime.dispatchedEvents[0]
+        XCTAssertEqual(edgeEvent.type, EventType.edge)
+        XCTAssertEqual(edgeEvent.source, EventSource.requestContent)
+
+        let expectedData: [String:Any] = [
+            AnalyticsConstants.XDMDataKeys.XDM: [
+                AnalyticsConstants.XDMDataKeys.EVENTTYPE: AnalyticsConstants.ANALYTICS_XDM_EVENTTYPE,
+            ],            
+            AnalyticsConstants.XDMDataKeys.DATA : [
+                AnalyticsConstants.XDMDataKeys.LEGACY: [
+                    AnalyticsConstants.XDMDataKeys.ANALYTICS: [
+                        "ndh": 1,
+                        AnalyticsConstants.AnalyticsRequestKeys.PAGE_NAME : "state",
+                        AnalyticsConstants.AnalyticsRequestKeys.CHARSET : AnalyticsConstants.CHARSET,
+                        AnalyticsConstants.AnalyticsRequestKeys.FORMATTED_TIMESTAMP : TimeZone.current.getOffsetFromGmtInMinutes(),
+                        AnalyticsConstants.AnalyticsRequestKeys.STRING_TIMESTAMP : String(trackStateEvent.timestamp.getUnixTimeInSeconds()),
+                        AnalyticsConstants.AnalyticsRequestKeys.CUSTOMER_PERSPECTIVE : AnalyticsConstants.APP_STATE_FOREGROUND,
+                        AnalyticsConstants.AnalyticsRequestKeys.CONTEXT_DATA : [
+                            "key1" : "value1",
+                            "key2" : "value2"
+                        ]
+                    ]
+                ]
+            ]
+        ]
+
+        XCTAssertTrue(NSDictionary(dictionary: edgeEvent.data!).isEqual(to: expectedData))
+    }
+
+    func testTrackAction() {
+        let trackData: [String: Any] = [
+            CoreConstants.Keys.ACTION : "action",
+            CoreConstants.Keys.CONTEXT_DATA : [
+                "key1": "value1",
+                "key2": "value2"
+            ]
+        ]
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
+
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.optedIn.rawValue], .set)
+        )
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 1)
+        let edgeEvent = mockRuntime.dispatchedEvents[0]
+        XCTAssertEqual(edgeEvent.type, EventType.edge)
+        XCTAssertEqual(edgeEvent.source, EventSource.requestContent)
+
+        let expectedData: [String:Any] = [
+            AnalyticsConstants.XDMDataKeys.XDM: [
+                AnalyticsConstants.XDMDataKeys.EVENTTYPE: AnalyticsConstants.ANALYTICS_XDM_EVENTTYPE,
+            ],
+            AnalyticsConstants.XDMDataKeys.DATA : [
+                AnalyticsConstants.XDMDataKeys.LEGACY: [
+                    AnalyticsConstants.XDMDataKeys.ANALYTICS: [
+                        "ndh": 1,
+
+                        AnalyticsConstants.AnalyticsRequestKeys.CHARSET : AnalyticsConstants.CHARSET,
+                        AnalyticsConstants.AnalyticsRequestKeys.FORMATTED_TIMESTAMP : TimeZone.current.getOffsetFromGmtInMinutes(),
+                        AnalyticsConstants.AnalyticsRequestKeys.STRING_TIMESTAMP : String(trackStateEvent.timestamp.getUnixTimeInSeconds()),
+                        AnalyticsConstants.AnalyticsRequestKeys.CUSTOMER_PERSPECTIVE : AnalyticsConstants.APP_STATE_FOREGROUND,
+                        AnalyticsConstants.AnalyticsRequestKeys.IGNORE_PAGE_NAME :  AnalyticsConstants.IGNORE_PAGE_NAME_VALUE,
+                        AnalyticsConstants.AnalyticsRequestKeys.ACTION_NAME:   "AMACTION:action",
+                        AnalyticsConstants.AnalyticsRequestKeys.CONTEXT_DATA : [
+                            "key1" : "value1",
+                            "key2" : "value2",
+                            AnalyticsConstants.ContextDataKeys.ACTION_KEY : "action"
+                        ]
+                    ]
+                ]
+            ]
+        ]
+
+        XCTAssertTrue(NSDictionary(dictionary: edgeEvent.data!).isEqual(to: expectedData))
+    }
+
+    func testTrackInternalAction() {
+        let trackData: [String: Any] = [
+            AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
+            CoreConstants.Keys.ACTION : "action",
+            CoreConstants.Keys.CONTEXT_DATA : [
+                "key1": "value1",
+                "key2": "value2"
+            ]
+        ]
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
+
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.optedIn.rawValue], .set)
+        )
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 1)
+        let edgeEvent = mockRuntime.dispatchedEvents[0]
+        XCTAssertEqual(edgeEvent.type, EventType.edge)
+        XCTAssertEqual(edgeEvent.source, EventSource.requestContent)
+
+        let expectedData: [String:Any] = [
+            AnalyticsConstants.XDMDataKeys.XDM: [
+                AnalyticsConstants.XDMDataKeys.EVENTTYPE: AnalyticsConstants.ANALYTICS_XDM_EVENTTYPE,
+            ],
+            AnalyticsConstants.XDMDataKeys.DATA : [
+                AnalyticsConstants.XDMDataKeys.LEGACY: [
+                    AnalyticsConstants.XDMDataKeys.ANALYTICS: [
+                        "ndh": 1,
+                        AnalyticsConstants.AnalyticsRequestKeys.CHARSET : AnalyticsConstants.CHARSET,
+                        AnalyticsConstants.AnalyticsRequestKeys.FORMATTED_TIMESTAMP : TimeZone.current.getOffsetFromGmtInMinutes(),
+                        AnalyticsConstants.AnalyticsRequestKeys.STRING_TIMESTAMP : String(trackStateEvent.timestamp.getUnixTimeInSeconds()),
+                        AnalyticsConstants.AnalyticsRequestKeys.CUSTOMER_PERSPECTIVE : AnalyticsConstants.APP_STATE_FOREGROUND,
+                        AnalyticsConstants.AnalyticsRequestKeys.IGNORE_PAGE_NAME :  AnalyticsConstants.IGNORE_PAGE_NAME_VALUE,
+                        AnalyticsConstants.AnalyticsRequestKeys.ACTION_NAME:   "ADBINTERNAL:action",
+                        AnalyticsConstants.AnalyticsRequestKeys.CONTEXT_DATA : [
+                            "key1" : "value1",
+                            "key2" : "value2",
+                            AnalyticsConstants.ContextDataKeys.INTERNAL_ACTION_KEY : "action"
+                        ]
+                    ]
+                ]
+            ]
+        ]
+
+        XCTAssertTrue(NSDictionary(dictionary: edgeEvent.data!).isEqual(to: expectedData))
+    }
+
+    func testPrivacyOptOut_dropsRequest() {
+        let trackData: [String: Any] = [
+            AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
+            CoreConstants.Keys.ACTION : "action",
+            CoreConstants.Keys.CONTEXT_DATA : [
+                "key1": "value1",
+                "key2": "value2"
+            ]
+        ]
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
+
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.optedOut.rawValue], .set)
+        )
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 0)
+    }
+
+    func testPrivacyOptUnknown_privacyModeParamPresent() {
+        let trackData: [String: Any] = [
+            AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
+            CoreConstants.Keys.ACTION : "action",
+            CoreConstants.Keys.CONTEXT_DATA : [
+                "key1": "value1",
+                "key2": "value2"
+            ]
+        ]
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
+
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.unknown.rawValue], .set)
+        )
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 1)
+        guard let eventDataDict = mockRuntime.dispatchedEvents[0].data else {
+            XCTFail("Failed to convert event data to [String: Any]")
+            return
         }
-
-        semaphore.wait()
+        let eventData = flattenDictionary(dict:eventDataDict)
+        XCTAssertEqual("unknown", eventData["data._legacy.analytics.c.a.privacy.mode"] as? String)
     }
+
+    func testAppendRequestEventUUID_activeAssuranceSession() {
+        let trackData: [String: Any] = [
+            AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
+            CoreConstants.Keys.ACTION : "action",
+            CoreConstants.Keys.CONTEXT_DATA : [
+                "key1": "value1",
+                "key2": "value2"
+            ]
+        ]
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
+
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.unknown.rawValue], .set)
+        )
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Assurance.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Assurance.SESSION_ID : "assuranceactive"], .set)
+        )
+
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 1)
+        guard let eventDataDict = mockRuntime.dispatchedEvents[0].data else {
+            XCTFail("Failed to convert event data to [String: Any]")
+            return
+        }
+        let eventData = flattenDictionary(dict:eventDataDict)
+        XCTAssertEqual(trackStateEvent.id.uuidString, eventData["data._legacy.analytics.c." + AnalyticsConstants.ContextDataKeys.EVENT_IDENTIFIER_KEY] as? String)
+    }
+
 }

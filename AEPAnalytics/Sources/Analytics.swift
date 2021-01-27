@@ -13,7 +13,6 @@
 import AEPCore
 import AEPServices
 import Foundation
-import AEPEdge
 
 /// Analytics extension for the Adobe Experience Platform SDK
 @objc(AEPMobileAnalytics)
@@ -29,21 +28,26 @@ public class Analytics: NSObject, Extension {
 
     // MARK: Extension
 
+    /// Initializes the Analytics extension and it's dependencies
     public required init(runtime: ExtensionRuntime) {
         self.runtime = runtime
         super.init()
     }
 
+    /// Invoked when the Analytics extension has been registered by the `EventHub`
     public func onRegistered() {
         registerListener(type: EventType.genericTrack, source: EventSource.requestContent, listener: handleAnalyticsRequest)
     }
 
+    /// Invoked when the Analytics extension has been unregistered by the `EventHub`, currently a no-op.
     public func onUnregistered() {
         Log.trace(label: LOG_TAG, "Extension unregistered from MobileCore: \(AnalyticsConstants.FRIENDLY_NAME)")
     }
 
+    /// Analytics extension is ready for an `Event` once configuration shared state is available
+    /// - Parameter event: an `Event`
     public func readyForEvent(_ event: Event) -> Bool {
-        return getSharedState(extensionName: AnalyticsConstants.SharedStateKeys.CONFIGURATION, event: event)?.status == .set
+        return getSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: event)?.status == .set
     }
 
     // MARK: Event Listeners
@@ -60,11 +64,12 @@ public class Analytics: NSObject, Extension {
         track(event: event)
     }
 
-    /// Process
+    /// Process analytics track request
     /// - Parameter event: an event containing track data for processing
     private func track(event: Event) {
         if getPrivacyStatus(event: event) == .optedOut {
             Log.warning(label: LOG_TAG, "track - Dropping track request (Privacy is opted out).")
+            return
         }
 
         let analyticsVars = processAnalyticsVars(event: event)
@@ -72,6 +77,9 @@ public class Analytics: NSObject, Extension {
         sendAnalyticsHit(analyticsVars: analyticsVars, analyticsData: analyticsData)
     }
 
+    /// Build analytics vars from track event data
+    /// - Parameter event: an event containing track data for processing
+    /// - Returns: Returns dictionary containing analytics vars
     private func processAnalyticsVars(event: Event) -> [String: String] {
         var ret = [String: String]()
 
@@ -111,6 +119,9 @@ public class Analytics: NSObject, Extension {
         return ret
     }
 
+    /// Build analytics context data from track event data
+    /// - Parameter event: an event containing track data for processing
+    /// - Returns: Returns dictionary containing analytics context data
     private func processAnalyticsData(event: Event) -> [String: String] {
         var ret = [String: String]()
 
@@ -132,9 +143,16 @@ public class Analytics: NSObject, Extension {
             ret[AnalyticsConstants.AnalyticsRequestKeys.PRIVACY_MODE] = "unknown"
         }
 
+        if isAssuranceSessionActive(event: event) {
+            ret[AnalyticsConstants.ContextDataKeys.EVENT_IDENTIFIER_KEY] = event.id.uuidString
+        }
+
         return ret
     }
 
+    /// Constructs and sends legacy analytics XDM event
+    /// - Parameter analyticsVars: a dictionary containing analytics vars
+    /// - Parameter analyticsData: a dictionary containing analytics data
     private func sendAnalyticsHit(analyticsVars: [String: String], analyticsData: [String: String]) {
         var legacyAnalyticsData: [String: Any] = analyticsVars
         var contextData = [String: String]()
@@ -153,11 +171,22 @@ public class Analytics: NSObject, Extension {
         }
         legacyAnalyticsData[AnalyticsConstants.XDMDataKeys.CONTEXT_DATA] = contextData
 
-        let xdm = [AnalyticsConstants.XDMDataKeys.EVENTTYPE: AnalyticsConstants.ANALYTICS_XDM_EVENTTYPE]
-        let edgeEventData: [String: Any] = [AnalyticsConstants.XDMDataKeys.LEGACY: [AnalyticsConstants.XDMDataKeys.ANALYTICS: legacyAnalyticsData]]
+        let xdm = [
+            AnalyticsConstants.XDMDataKeys.EVENTTYPE: AnalyticsConstants.ANALYTICS_XDM_EVENTTYPE
+        ]
+        let edgeEventData: [String: Any] = [
+            AnalyticsConstants.XDMDataKeys.LEGACY: [
+                AnalyticsConstants.XDMDataKeys.ANALYTICS: legacyAnalyticsData
+            ]
+        ]
 
-        let experienceEvent = ExperienceEvent(xdm: xdm, data: edgeEventData)
-        Edge.sendEvent(experienceEvent: experienceEvent, responseHandler: nil)
+        let edgeEvent = Event(name: AnalyticsConstants.ANALYTICS_XDM_EVENTNAME,
+                              type: EventType.edge,
+                              source: EventSource.requestContent,
+                              data: [AnalyticsConstants.XDMDataKeys.XDM: xdm,
+                                     AnalyticsConstants.XDMDataKeys.DATA: edgeEventData]
+        )
+        dispatch(event: edgeEvent)
     }
 
     private func getActionKey(isInternalAction: Bool) -> String {
@@ -169,11 +198,26 @@ public class Analytics: NSObject, Extension {
         return isInternalAction ? AnalyticsConstants.INTERNAL_ACTION_PREFIX : AnalyticsConstants.ACTION_PREFIX
     }
 
+    /// Returns the privacy status from configuration shared state w.r.t the event
+    /// - Parameter event: An event to get configuration shared state
+    /// - Returns : Returns privacy status w.r.t the event
     private func getPrivacyStatus(event: Event) -> PrivacyStatus {
-        guard let configSharedState = getSharedState(extensionName: AnalyticsConstants.SharedStateKeys.CONFIGURATION, event: event)?.value else { return .unknown
+        guard let configSharedState = getSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: event)?.value else { return .unknown
         }
 
         let privacyStatusStr = configSharedState[AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String ?? ""
         return PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
+    }
+
+    /// Returns if assurance session is active
+    /// - Parameter event: An event to get assurance shared state
+    /// - Returns : Returns if assurance session is active
+    private func isAssuranceSessionActive(event: Event) -> Bool {
+        guard let assuranceSharedState = getSharedState(extensionName: AnalyticsConstants.Assurance.SHARED_STATE_NAME, event: event)?.value else {
+            return false
+        }
+
+        let sessionId = assuranceSharedState[AnalyticsConstants.Assurance.SESSION_ID] as? String ?? ""
+        return !sessionId.isEmpty
     }
 }

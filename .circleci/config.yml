@@ -14,10 +14,26 @@ jobs:
 
   build-and-test:
     macos:
-      xcode: 11.1.0 # Specify the Xcode version to use
+      xcode: 11.6.0 # Specify the Xcode version to use
 
     steps:
       - checkout
+      
+       # restore pods related caches
+      - restore_cache:
+          keys:
+            - 1-gems-{{ checksum "Gemfile.lock" }}
+
+      # make sure we're on the right version of cocoapods
+      - run:
+          name: Verify Cocoapods Version
+          command: bundle check || bundle install --path vendor/bundle
+
+      # save cocoapods version gem data
+      - save_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
 
       # restore pods related caches
       - restore_cache:
@@ -29,7 +45,7 @@ jobs:
       # install CocoaPods - using default CocoaPods version, not the bundle
       - run:
           name: Repo Update & Install CocoaPods
-          command: make pod-install
+          command: make ci-pod-install
 
       # save pods related files
       - save_cache:
