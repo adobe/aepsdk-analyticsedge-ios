@@ -50,6 +50,7 @@ playground.xcworkspace
 build/ios.xcarchive
 build/AEPAnalytics.xcframework
 build/ios_simulator.xcarchive
+build/out
 
 # CocoaPods
 #

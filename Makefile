@@ -42,7 +42,7 @@ archive:
 	xcodebuild -create-xcframework -framework $(IOS_ARCHIVE_PATH)$(PROJECT_NAME).framework -output ./build/$(TARGET_NAME_XCFRAMEWORK)
 
 clean:
-	rm -rf ./build
+	rm -rf ./build/out
 
 format:
 	swiftformat . --swiftversion 5.2
