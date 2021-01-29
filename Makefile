@@ -6,6 +6,8 @@ SCHEME_NAME_XCFRAMEWORK = AEPAnalytics
 SIMULATOR_ARCHIVE_PATH = ./build/ios_simulator.xcarchive/Products/Library/Frameworks/
 IOS_ARCHIVE_PATH = ./build/ios.xcarchive/Products/Library/Frameworks/
 
+.PHONY: test clean
+
 setup:
 	(cd build && pod install)
 
