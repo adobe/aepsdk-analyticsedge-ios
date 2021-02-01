@@ -37,6 +37,7 @@ public class Analytics: NSObject, Extension {
     /// Invoked when the Analytics extension has been registered by the `EventHub`
     public func onRegistered() {
         registerListener(type: EventType.genericTrack, source: EventSource.requestContent, listener: handleAnalyticsRequest)
+        registerListener(type: EventType.rulesEngine, source: EventSource.responseContent, listener: handleRulesEngineResponse)
     }
 
     /// Invoked when the Analytics extension has been unregistered by the `EventHub`, currently a no-op.
@@ -61,43 +62,77 @@ public class Analytics: NSObject, Extension {
         }
 
         Log.trace(label: LOG_TAG, "handleAnalyticsRequest - Processing event with id \(event.id.uuidString).")
-        track(event: event)
+        track(event: event, data: event.data)
+    }
+
+    /// Handler for rules engine response events
+    /// - Parameter event: an event containing consequence for processing
+    private func handleRulesEngineResponse(event: Event) {
+        if event.data == nil {
+            Log.trace(label: LOG_TAG, "Event with id \(event.id.uuidString) contained no data, ignoring.")
+            return
+        }
+
+        Log.trace(label: LOG_TAG, "handleRulesEngineResponse - Processing event with id \(event.id.uuidString).")
+
+        guard let consequence = event.data?[AnalyticsConstants.EventDataKeys.TRIGGERED_CONSEQUENCE] as? [String: Any] else {
+            Log.trace(label: LOG_TAG, "handleRulesEngineResponse - Ignoring as missing consequence data for \(event.id.uuidString).")
+            return
+        }
+
+        guard let consequenceType = consequence[AnalyticsConstants.EventDataKeys.TYPE] as? String, consequenceType == AnalyticsConstants.ConsequenceTypes.TRACK else {
+            Log.trace(label: LOG_TAG, "handleRulesEngineResponse - Ignoring as consequence type is not analytics for \(event.id.uuidString).")
+            return
+        }
+
+        guard let _ = consequence[AnalyticsConstants.EventDataKeys.ID] as? String else {
+            Log.trace(label: LOG_TAG, "handleRulesEngineResponse - Ignoring as consequence id is missing for \(event.id.uuidString).")
+            return
+        }
+
+        let consequenceDetail = consequence[AnalyticsConstants.EventDataKeys.DETAIL] as? [String: Any] ?? [:]
+        track(event: event, data: consequenceDetail)
     }
 
     /// Process analytics track request
     /// - Parameter event: an event containing track data for processing
-    private func track(event: Event) {
+    /// - Parameter data: track data for processing
+    private func track(event: Event, data: [String: Any]?) {
         if getPrivacyStatus(event: event) == .optedOut {
-            Log.warning(label: LOG_TAG, "track - Dropping track request (Privacy is opted out).")
+            Log.warning(label: LOG_TAG, "track - Dropping request (Privacy is opted out).")
             return
         }
 
-        let analyticsVars = processAnalyticsVars(event: event)
-        let analyticsData = processAnalyticsData(event: event)
+        guard let data = data, data.keys.contains(AnalyticsConstants.EventDataKeys.TRACK_STATE) ||
+            data.keys.contains(AnalyticsConstants.EventDataKeys.TRACK_ACTION) ||
+            data.keys.contains(AnalyticsConstants.EventDataKeys.CONTEXT_DATA) else {
+            Log.warning(label: LOG_TAG, "track - Dropping request as event data is missing state, action or contextData")
+            return
+        }
+
+        let analyticsVars = processAnalyticsVars(event: event, data: data)
+        let analyticsData = processAnalyticsData(event: event, data: data)
         sendAnalyticsHit(analyticsVars: analyticsVars, analyticsData: analyticsData)
     }
 
     /// Build analytics vars from track event data
     /// - Parameter event: an event containing track data for processing
+    /// - Parameter data: track data for processing
     /// - Returns: Returns dictionary containing analytics vars
-    private func processAnalyticsVars(event: Event) -> [String: String] {
+    private func processAnalyticsVars(event: Event, data: [String: Any]) -> [String: String] {
         var ret = [String: String]()
 
-        guard let eventData = event.data else {
-            return ret
-        }
-
-        // context: pe/pev2 values should always be present in track calls if there's action regardless of state.
+        // Context: pe/pev2 values should always be present in track calls if there's action regardless of state.
         // If state is present then pageName = state name else pageName = app id to prevent hit from being discarded.
-        if let actionName = eventData[AnalyticsConstants.EventDataKeys.TRACK_ACTION] as? String, !actionName.isEmpty {
+        if let actionName = data[AnalyticsConstants.EventDataKeys.TRACK_ACTION] as? String, !actionName.isEmpty {
             ret[AnalyticsConstants.AnalyticsRequestKeys.IGNORE_PAGE_NAME] =  AnalyticsConstants.IGNORE_PAGE_NAME_VALUE
-            let isInternal = eventData[AnalyticsConstants.EventDataKeys.TRACK_INTERNAL] as? Bool ?? false
+            let isInternal = data[AnalyticsConstants.EventDataKeys.TRACK_INTERNAL] as? Bool ?? false
             ret[AnalyticsConstants.AnalyticsRequestKeys.ACTION_NAME] = getActionPrefix(isInternalAction: isInternal) + actionName
         }
-        // Todo :- We currently read application id from lifecycle
-        //ret[AnalyticsConstants.AnalyticsRequestKeys.PAGE_NAME] = state->GetApplicationId();
 
-        if let stateName = eventData[AnalyticsConstants.EventDataKeys.TRACK_STATE] as? String, !stateName.isEmpty {
+        ret[AnalyticsConstants.AnalyticsRequestKeys.PAGE_NAME] = AnalyticsHelper.getApplicationIdentifier()
+
+        if let stateName = data[AnalyticsConstants.EventDataKeys.TRACK_STATE] as? String, !stateName.isEmpty {
             ret[AnalyticsConstants.AnalyticsRequestKeys.PAGE_NAME] = stateName
         }
 
@@ -110,8 +145,6 @@ public class Analytics: NSObject, Extension {
         // Set timestamp for all requests.
         ret[AnalyticsConstants.AnalyticsRequestKeys.STRING_TIMESTAMP] = String(event.timestamp.getUnixTimeInSeconds())
 
-        // Todo:- GetAnalyticsIdVisitorParameters ??
-
         if let appState = AnalyticsHelper.getApplicationState() {
             ret[AnalyticsConstants.AnalyticsRequestKeys.CUSTOMER_PERSPECTIVE] = appState == .background ? AnalyticsConstants.APP_STATE_BACKGROUND : AnalyticsConstants.APP_STATE_FOREGROUND
         }
@@ -121,23 +154,20 @@ public class Analytics: NSObject, Extension {
 
     /// Build analytics context data from track event data
     /// - Parameter event: an event containing track data for processing
+    /// - Parameter data: track data for processing
     /// - Returns: Returns dictionary containing analytics context data
-    private func processAnalyticsData(event: Event) -> [String: String] {
+    private func processAnalyticsData(event: Event, data: [String: Any]) -> [String: String] {
         var ret = [String: String]()
 
-        // Todo:- Should we append default lifecycle context data (os version, device name, device version, etc) to each hits?
-
-        let contextData = event.data?[AnalyticsConstants.EventDataKeys.CONTEXT_DATA] as? [String: String] ?? [String: String]()
+        let contextData = data[AnalyticsConstants.EventDataKeys.CONTEXT_DATA] as? [String: String] ?? [String: String]()
         if !contextData.isEmpty {
             contextData.forEach { (key, value) in ret[key] = value }
         }
 
-        if let actionName = event.data?[AnalyticsConstants.EventDataKeys.TRACK_ACTION] as? String, !actionName.isEmpty {
-            let isInternal = event.data?[AnalyticsConstants.EventDataKeys.TRACK_INTERNAL] as? Bool ?? false
+        if let actionName = data[AnalyticsConstants.EventDataKeys.TRACK_ACTION] as? String, !actionName.isEmpty {
+            let isInternal = data[AnalyticsConstants.EventDataKeys.TRACK_INTERNAL] as? Bool ?? false
             ret[getActionKey(isInternalAction: isInternal)] = actionName
         }
-
-        // Todo :- Is TimeSinceLaunch" param is required? If so, calculate by listenining to lifecycle shared state update
 
         if getPrivacyStatus(event: event) == .unknown {
             ret[AnalyticsConstants.AnalyticsRequestKeys.PRIVACY_MODE] = "unknown"

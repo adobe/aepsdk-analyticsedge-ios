@@ -42,7 +42,7 @@ enum AnalyticsConstants {
         static let CHARSET = "ce"
         static let FORMATTED_TIMESTAMP = "t"
         static let STRING_TIMESTAMP = "ts"
-        static let CONTEXT_DATA = "c"        
+        static let CONTEXT_DATA = "c"
         static let PAGE_NAME = "pageName"
         static let IGNORE_PAGE_NAME = "pe"
         static let CUSTOMER_PERSPECTIVE = "cp"
@@ -64,13 +64,21 @@ enum AnalyticsConstants {
         static let CONTEXT_DATA = "contextdata"
         static let ANALYTICS_SERVER_RESPONSE = "analyticsserverresponse"
         static let VISITOR_IDENTIFIER = "vid"
-        static let RULES_CONSEQUENCE_TYPE_TRACK = "an"
         static let HEADERS_RESPONSE = "headers"
         static let ETAG_HEADER = "ETag"
         static let SERVER_HEADER = "Server"
         static let CONTENT_TYPE_HEADER = "Content-Type"
         static let HIT_HOST = "hitHost"
         static let HIT_URL = "hitUrl"
+
+        static let TRIGGERED_CONSEQUENCE = "triggeredconsequence"
+        static let ID = "id"
+        static let DETAIL = "detail"
+        static let TYPE = "type"
+    }
+
+    enum ConsequenceTypes {
+        static let TRACK = "an"
     }
 
     enum ContextDataKeys {
