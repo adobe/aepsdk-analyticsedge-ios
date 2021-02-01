@@ -25,6 +25,26 @@ class AnalyticsAPITests: XCTestCase {
         analytics.onRegistered()
     }
 
+    func testReadyForEvent() {
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: nil)
+        XCTAssertEqual(analytics.readyForEvent(trackStateEvent), false)
+
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.optedIn.rawValue], .set)
+        )
+        XCTAssertEqual(analytics.readyForEvent(trackStateEvent), true)
+    }
+
+    func testTrack_emptyData() {
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: nil)
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.optedIn.rawValue], .set)
+        )
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 0)
+    }
+
     func testTrackState() {
         // test
         let trackData: [String: Any] = [
@@ -169,6 +189,32 @@ class AnalyticsAPITests: XCTestCase {
         XCTAssertTrue(NSDictionary(dictionary: edgeEvent.data!).isEqual(to: expectedData))
     }
 
+    func testTrack_strippedContextData() {
+        let trackData: [String: Any] = [
+            AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
+            CoreConstants.Keys.ACTION : "action",
+            CoreConstants.Keys.CONTEXT_DATA : [
+                "&&product": "value",
+            ]
+        ]
+
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
+
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.optedIn.rawValue], .set)
+        )
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 1)
+        guard let eventDataDict = mockRuntime.dispatchedEvents[0].data else {
+            XCTFail("Failed to convert event data to [String: Any]")
+            return
+        }
+        let eventData = flattenDictionary(dict:eventDataDict)
+        XCTAssertEqual("value", eventData["data._legacy.analytics.product"] as? String)
+    }
+
     func testPrivacyOptOut_dropsRequest() {
         let trackData: [String: Any] = [
             AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
@@ -248,6 +294,12 @@ class AnalyticsAPITests: XCTestCase {
         XCTAssertEqual(mockRuntime.dispatchedEvents.count, 0)
     }
 
+    func testRuleEngineResponse_missingConsequence() {
+        let ruleEngineEvent = Event(name: "Rule event", type: EventType.rulesEngine, source: EventSource.responseContent, data: [:])
+        mockRuntime.simulateComingEvent(event: ruleEngineEvent)
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 0)
+    }
+
     func testRuleEngineResponse_incorrectConsequenceType() {
         let eventData: [String: Any] = [
             AnalyticsConstants.EventDataKeys.TRIGGERED_CONSEQUENCE: [
@@ -265,7 +317,7 @@ class AnalyticsAPITests: XCTestCase {
     func testRuleEngineResponse_missingConsequenceID() {
         let eventData: [String: Any] = [
             AnalyticsConstants.EventDataKeys.TRIGGERED_CONSEQUENCE: [
-                AnalyticsConstants.EventDataKeys.TYPE: "type",
+                AnalyticsConstants.EventDataKeys.TYPE: "an",
                 AnalyticsConstants.EventDataKeys.DETAIL : ["action": "action"]
             ]
         ]

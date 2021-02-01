@@ -57,7 +57,7 @@ public class Analytics: NSObject, Extension {
     /// - Parameter event: an event containing track data for processing
     private func handleAnalyticsRequest(event: Event) {
         if event.data == nil {
-            Log.warning(label: LOG_TAG, "Event with id \(event.id.uuidString) contained no data, ignoring.")
+            Log.trace(label: LOG_TAG, "Event with id \(event.id.uuidString) contained no data, ignoring.")
             return
         }
 
@@ -80,7 +80,7 @@ public class Analytics: NSObject, Extension {
             return
         }
 
-        guard let consequenceType = consequence[AnalyticsConstants.EventDataKeys.TYPE] as? String , consequenceType == AnalyticsConstants.ConsequenceTypes.TRACK else {
+        guard let consequenceType = consequence[AnalyticsConstants.EventDataKeys.TYPE] as? String, consequenceType == AnalyticsConstants.ConsequenceTypes.TRACK else {
             Log.trace(label: LOG_TAG, "handleRulesEngineResponse - Ignoring as consequence type is not analytics for \(event.id.uuidString).")
             return
         }
@@ -91,7 +91,7 @@ public class Analytics: NSObject, Extension {
         }
 
         let consequenceDetail = consequence[AnalyticsConstants.EventDataKeys.DETAIL] as? [String: Any] ?? [:]
-        track(event: event, data: consequenceDetail)        
+        track(event: event, data: consequenceDetail)
     }
 
     /// Process analytics track request
@@ -106,7 +106,7 @@ public class Analytics: NSObject, Extension {
         guard let data = data, data.keys.contains(AnalyticsConstants.EventDataKeys.TRACK_STATE) ||
             data.keys.contains(AnalyticsConstants.EventDataKeys.TRACK_ACTION) ||
             data.keys.contains(AnalyticsConstants.EventDataKeys.CONTEXT_DATA) else {
-            Log.warning(label: LOG_TAG, "track - Dropping request as event data is missing state, action & contextData")
+            Log.warning(label: LOG_TAG, "track - Dropping request as event data is missing state, action or contextData")
             return
         }
 
@@ -144,8 +144,6 @@ public class Analytics: NSObject, Extension {
 
         // Set timestamp for all requests.
         ret[AnalyticsConstants.AnalyticsRequestKeys.STRING_TIMESTAMP] = String(event.timestamp.getUnixTimeInSeconds())
-
-        // Todo:- GetAnalyticsIdVisitorParameters ??
 
         if let appState = AnalyticsHelper.getApplicationState() {
             ret[AnalyticsConstants.AnalyticsRequestKeys.CUSTOMER_PERSPECTIVE] = appState == .background ? AnalyticsConstants.APP_STATE_BACKGROUND : AnalyticsConstants.APP_STATE_FOREGROUND
