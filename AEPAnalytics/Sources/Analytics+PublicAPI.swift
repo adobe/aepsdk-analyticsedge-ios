@@ -16,7 +16,7 @@ import Foundation
 
 /// Defines the public interface for the Analytics extension
 @objc public extension Analytics {
-    private static let LOG_TAG = "Analytics"
+    private static let LOG_TAG = "AnalyticsEdge"
 
     /// Clears all hits from the tracking queue and removes them from the database.
     @objc(clearQueue)

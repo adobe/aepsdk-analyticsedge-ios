@@ -13,7 +13,7 @@
 import Foundation
 
 enum AnalyticsConstants {
-    static let EXTENSION_NAME = "com.adobe.module.analyticsedge"
+    static let EXTENSION_NAME = "com.adobe.module.analytics"
     static let FRIENDLY_NAME = "AnalyticsEdge"
     static let EXTENSION_VERSION = "0.0.1"
     static let DATASTORE_NAME = EXTENSION_NAME
@@ -98,4 +98,35 @@ enum AnalyticsConstants {
 
     static let ANALYTICS_XDM_EVENTTYPE = "legacy.analytics"
     static let ANALYTICS_XDM_EVENTNAME = "Analytics Edge Request"
+
+    enum DataStoreKeys {
+        static let AID = "aid"
+        static let IGNORE_AID = "ignoreaid"
+        static let VID = "vid"
+        static let DATA_MIGRATED = "data.migrated"
+    }
+
+    enum V4Migration {
+        // Migrate
+        static let AID = "ADOBEMOBILE_STOREDDEFAULTS_AID"
+        static let IGNORE_AID = "ADOBEMOBILE_STOREDDEFAULTS_IGNOREAID"
+        static let VID = "AOMS_AppMeasurement_StoredDefaults_VisitorID"
+        // Delete
+        static let AID_SYNCED = "ADOBEMOBILE_STOREDDEFAULTS_AIDSYNCED"
+        static let LAST_TIMESTAMP = "ADBMobileLastTimestamp"
+        static let CURRENT_HIT_ID  = "ANALYTICS_WORKER_CURRENT_ID"
+        static let CURRENT_HIT_STAMP = "ANALYTICS_WORKER_CURRENT_STAMP"
+    }
+
+    enum V5Migration {
+        // Migrate
+        static let AID  = "Adobe.AnalyticsDataStorage.ADOBEMOBILE_STOREDDEFAULTS_AID"
+        static let IGNORE_AID = "Adobe.AnalyticsDataStorage.ADOBEMOBILE_STOREDDEFAULTS_IGNOREAID"
+        static let VID = "Adobe.AnalyticsDataStorage.ADOBEMOBILE_STOREDDEFAULTS_VISITOR_IDENTIFIER"
+        static let IDENTITY_VID = "Adobe.visitorIDServiceDataStore.ADOBEMOBILE_VISITOR_ID" // In some cases VID from v4 was migrated to identity datastore.
+
+        // Delete
+        static let MOST_RECENT_HIT_TIMESTAMP = "Adobe.AnalyticsDataStorage.mostRecentHitTimestampSeconds"
+    }
+
 }

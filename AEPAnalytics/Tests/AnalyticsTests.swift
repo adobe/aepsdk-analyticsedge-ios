@@ -18,11 +18,29 @@ import AEPServices
 class AnalyticsAPITests: XCTestCase {
     var mockRuntime: TestableExtensionRuntime!
     var analytics: Analytics!
+    var dataStore: NamedCollectionDataStore!
 
-    override func setUp() {
+    private var userDefaults: UserDefaults {
+        if let appGroup = ServiceProvider.shared.namedKeyValueService.getAppGroup(), !appGroup.isEmpty {
+            return UserDefaults(suiteName: appGroup) ?? UserDefaults.standard
+        }
+
+        return UserDefaults.standard
+    }
+
+    private func resetExtension() {
         mockRuntime = TestableExtensionRuntime()
         analytics = Analytics(runtime: mockRuntime)
         analytics.onRegistered()
+    }
+
+    override func setUp() {
+        UserDefaults.clear()
+
+        ServiceProvider.shared.namedKeyValueService = MockDataStore()
+        dataStore = NamedCollectionDataStore(name: AnalyticsConstants.DATASTORE_NAME)
+
+        resetExtension()
     }
 
     func testReadyForEvent() {
@@ -195,6 +213,8 @@ class AnalyticsAPITests: XCTestCase {
             CoreConstants.Keys.ACTION : "action",
             CoreConstants.Keys.CONTEXT_DATA : [
                 "&&product": "value",
+                "key1": "value1",
+                "key2": "value2",
             ]
         ]
 
@@ -213,16 +233,15 @@ class AnalyticsAPITests: XCTestCase {
         }
         let eventData = flattenDictionary(dict:eventDataDict)
         XCTAssertEqual("value", eventData["data._legacy.analytics.product"] as? String)
+        // Other keys are in context data
+        XCTAssertEqual("value1", eventData["data._legacy.analytics.c.key1"] as? String)
+        XCTAssertEqual("value2", eventData["data._legacy.analytics.c.key2"] as? String)
     }
 
     func testPrivacyOptOut_dropsRequest() {
         let trackData: [String: Any] = [
-            AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
             CoreConstants.Keys.ACTION : "action",
-            CoreConstants.Keys.CONTEXT_DATA : [
-                "key1": "value1",
-                "key2": "value2"
-            ]
+            CoreConstants.Keys.CONTEXT_DATA : [:]
         ]
         let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
 
@@ -238,10 +257,7 @@ class AnalyticsAPITests: XCTestCase {
         let trackData: [String: Any] = [
             AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
             CoreConstants.Keys.ACTION : "action",
-            CoreConstants.Keys.CONTEXT_DATA : [
-                "key1": "value1",
-                "key2": "value2"
-            ]
+            CoreConstants.Keys.CONTEXT_DATA : [:]
         ]
         let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
 
@@ -263,10 +279,7 @@ class AnalyticsAPITests: XCTestCase {
         let trackData: [String: Any] = [
             AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
             CoreConstants.Keys.ACTION : "action",
-            CoreConstants.Keys.CONTEXT_DATA : [
-                "key1": "value1",
-                "key2": "value2"
-            ]
+            CoreConstants.Keys.CONTEXT_DATA : [:]
         ]
         let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
 
@@ -385,5 +398,121 @@ class AnalyticsAPITests: XCTestCase {
         ]
 
         XCTAssertTrue(NSDictionary(dictionary: edgeEvent.data!).isEqual(to: expectedData))
+    }
+
+    func testIds_areSentIfPresentInDatastore() {
+        dataStore.set(key: AnalyticsConstants.DataStoreKeys.VID, value: "testvid")
+        dataStore.set(key: AnalyticsConstants.DataStoreKeys.AID, value: "testaid")
+
+        let trackData: [String: Any] = [
+            AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
+            CoreConstants.Keys.ACTION : "action",
+            CoreConstants.Keys.CONTEXT_DATA : [:]
+        ]
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
+
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.unknown.rawValue], .set)
+        )
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 1)
+        guard let eventDataDict = mockRuntime.dispatchedEvents[0].data else {
+            XCTFail("Failed to convert event data to [String: Any]")
+            return
+        }
+        let eventData = flattenDictionary(dict:eventDataDict)
+        XCTAssertEqual("testaid", eventData["data._legacy.analytics.aid"] as? String)
+        XCTAssertEqual("testvid", eventData["data._legacy.analytics.vid"] as? String)
+    }
+
+    func testIds_areResetAfterStatusChange() {
+        dataStore.set(key: AnalyticsConstants.DataStoreKeys.VID, value: "testvid")
+        dataStore.set(key: AnalyticsConstants.DataStoreKeys.AID, value: "testaid")
+
+        let optOutEvent = Event(name: "Config change event", type: EventType.configuration, source: EventSource.responseContent, data: [AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.optedOut.rawValue])
+        mockRuntime.simulateComingEvent(event: optOutEvent)
+
+        let optInEvent = Event(name: "Config change event", type: EventType.configuration, source: EventSource.responseContent, data: [AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.optedIn.rawValue])        
+        mockRuntime.simulateComingEvent(event: optInEvent)
+
+        let trackData: [String: Any] = [
+            AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
+            CoreConstants.Keys.ACTION : "action",
+            CoreConstants.Keys.CONTEXT_DATA : [:]
+        ]
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 1)
+        guard let eventDataDict = mockRuntime.dispatchedEvents[0].data else {
+            XCTFail("Failed to convert event data to [String: Any]")
+            return
+        }
+        let eventData = flattenDictionary(dict:eventDataDict)
+        XCTAssertFalse(eventData.keys.contains("data._legacy.analytics.aid"))
+        XCTAssertFalse(eventData.keys.contains("data._legacy.analytics.vid"))        
+    }
+
+    func testIds_areMigratedIfPresentInV4Datastore() {
+        // Force data migration again by deleting this key.
+        dataStore.remove(key: AnalyticsConstants.DataStoreKeys.DATA_MIGRATED)
+        // Set v4 datastore with aid, vid
+        userDefaults.set("testaid", forKey: AnalyticsConstants.V4Migration.AID)
+        userDefaults.set("testvid", forKey: AnalyticsConstants.V4Migration.VID)
+        // Analytics extension migrates the ids during setup.
+        resetExtension()
+
+        let trackData: [String: Any] = [
+            AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
+            CoreConstants.Keys.ACTION : "action",
+            CoreConstants.Keys.CONTEXT_DATA : [:]
+        ]
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
+
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.unknown.rawValue], .set)
+        )
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 1)
+        guard let eventDataDict = mockRuntime.dispatchedEvents[0].data else {
+            XCTFail("Failed to convert event data to [String: Any]")
+            return
+        }
+        let eventData = flattenDictionary(dict:eventDataDict)
+        XCTAssertEqual("testaid", eventData["data._legacy.analytics.aid"] as? String)
+        XCTAssertEqual("testvid", eventData["data._legacy.analytics.vid"] as? String)
+    }
+
+    func testIds_areMigratedIfPresentInV5Datastore() {
+        // Force data migration again by deleting this key.
+        dataStore.remove(key: AnalyticsConstants.DataStoreKeys.DATA_MIGRATED)
+        // Set v4 datastore with aid, vid
+        userDefaults.set("testaid", forKey: AnalyticsConstants.V5Migration.AID)
+        userDefaults.set("testvid", forKey: AnalyticsConstants.V5Migration.VID)
+        // Analytics extension migrates the ids during setup.
+        resetExtension()
+
+        let trackData: [String: Any] = [
+            AnalyticsConstants.EventDataKeys.TRACK_INTERNAL: true,
+            CoreConstants.Keys.ACTION : "action",
+            CoreConstants.Keys.CONTEXT_DATA : [:]
+        ]
+        let trackStateEvent = Event(name: "Generic track event", type: EventType.genericTrack, source: EventSource.requestContent, data: trackData)
+
+        mockRuntime.simulateSharedState(extensionName: AnalyticsConstants.Configuration.SHARED_STATE_NAME, event: trackStateEvent, data:
+            ([AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY : PrivacyStatus.unknown.rawValue], .set)
+        )
+        mockRuntime.simulateComingEvent(event: trackStateEvent)
+
+        XCTAssertEqual(mockRuntime.dispatchedEvents.count, 1)
+        guard let eventDataDict = mockRuntime.dispatchedEvents[0].data else {
+            XCTFail("Failed to convert event data to [String: Any]")
+            return
+        }
+        let eventData = flattenDictionary(dict:eventDataDict)
+        XCTAssertEqual("testaid", eventData["data._legacy.analytics.aid"] as? String)
+        XCTAssertEqual("testvid", eventData["data._legacy.analytics.vid"] as? String)
     }
 }

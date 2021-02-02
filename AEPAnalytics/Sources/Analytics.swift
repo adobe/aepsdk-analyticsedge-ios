@@ -17,7 +17,7 @@ import Foundation
 /// Analytics extension for the Adobe Experience Platform SDK
 @objc(AEPMobileAnalytics)
 public class Analytics: NSObject, Extension {
-    private let LOG_TAG = "Analytics"
+    private let LOG_TAG = "AnalyticsEdge"
 
     public let runtime: ExtensionRuntime
 
@@ -25,6 +25,7 @@ public class Analytics: NSObject, Extension {
     public let friendlyName = AnalyticsConstants.FRIENDLY_NAME
     public static let extensionVersion = AnalyticsConstants.EXTENSION_VERSION
     public let metadata: [String: String]? = nil
+    private let dataStore = NamedCollectionDataStore(name: AnalyticsConstants.DATASTORE_NAME)
 
     // MARK: Extension
 
@@ -32,12 +33,15 @@ public class Analytics: NSObject, Extension {
     public required init(runtime: ExtensionRuntime) {
         self.runtime = runtime
         super.init()
+
+        AnalyticsMigrator.migrateLocalStorage(dataStore: dataStore)
     }
 
     /// Invoked when the Analytics extension has been registered by the `EventHub`
     public func onRegistered() {
         registerListener(type: EventType.genericTrack, source: EventSource.requestContent, listener: handleAnalyticsRequest)
         registerListener(type: EventType.rulesEngine, source: EventSource.responseContent, listener: handleRulesEngineResponse)
+        registerListener(type: EventType.configuration, source: EventSource.responseContent, listener: handleConfigurationResponse)
     }
 
     /// Invoked when the Analytics extension has been unregistered by the `EventHub`, currently a no-op.
@@ -94,6 +98,23 @@ public class Analytics: NSObject, Extension {
         track(event: event, data: consequenceDetail)
     }
 
+    /// Handler for configuration response event
+    /// - Parameter event: an event containing configuration response event
+    private func handleConfigurationResponse(event: Event) {
+        if event.data == nil {
+            Log.trace(label: LOG_TAG, "Event with id \(event.id.uuidString) contained no data, ignoring.")
+            return
+        }
+
+        if let privacyStatusStr = event.data?[AnalyticsConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String {
+            let privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
+            if privacyStatus == .optedOut {
+                // Clear persisted ids
+                clearDataStore()
+            }
+        }
+    }
+
     /// Process analytics track request
     /// - Parameter event: an event containing track data for processing
     /// - Parameter data: track data for processing
@@ -136,8 +157,13 @@ public class Analytics: NSObject, Extension {
             ret[AnalyticsConstants.AnalyticsRequestKeys.PAGE_NAME] = stateName
         }
 
-        // Todo:- Aid. Should we add it to identity map or vars
-        // Todo:- Vid. Should we add it to identity map or vars
+        if let aid = getAID() {
+            ret[AnalyticsConstants.AnalyticsRequestKeys.ANALYTICS_ID] = aid
+        }
+
+        if let vid = getVID() {
+            ret[AnalyticsConstants.AnalyticsRequestKeys.VISITOR_ID] = vid
+        }
 
         ret[AnalyticsConstants.AnalyticsRequestKeys.CHARSET] = AnalyticsConstants.CHARSET
         ret[AnalyticsConstants.AnalyticsRequestKeys.FORMATTED_TIMESTAMP] = TimeZone.current.getOffsetFromGmtInMinutes()
@@ -249,5 +275,19 @@ public class Analytics: NSObject, Extension {
 
         let sessionId = assuranceSharedState[AnalyticsConstants.Assurance.SESSION_ID] as? String ?? ""
         return !sessionId.isEmpty
+    }
+
+    private func getAID() -> String? {
+        return dataStore.getString(key: AnalyticsConstants.DataStoreKeys.AID)
+    }
+
+    private func getVID() -> String? {
+        return dataStore.getString(key: AnalyticsConstants.DataStoreKeys.VID)
+    }
+
+    private func clearDataStore() {
+        dataStore.remove(key: AnalyticsConstants.DataStoreKeys.AID)
+        dataStore.remove(key: AnalyticsConstants.DataStoreKeys.VID)
+        dataStore.remove(key: AnalyticsConstants.DataStoreKeys.IGNORE_AID)
     }
 }
