@@ -13,8 +13,10 @@ coverage:
     changes: no
 
   ignore:    
+    - "./AEPAnalytics/Mocks/.*"
     - "./AEPAnalytics/Mocks/**/*"
-    - "./AEPAnalytics/Tests/**/*"    
+    - "./AEPAnalytics/Tests/.*"
+    - "./AEPAnalytics/Tests/**/*"
     - "./test/**/*"
 
 parsers:
