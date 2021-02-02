@@ -14,6 +14,7 @@
 		AC36EBFC25C8D6D200A37345 /* AnalyticsMigratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC36EBF325C8D30F00A37345 /* AnalyticsMigratorTests.swift */; };
 		AC36EC0825C8D71800A37345 /* MockDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC36EC0325C8D71500A37345 /* MockDataStore.swift */; };
 		AC36EC1425C8D7F900A37345 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC36EC0F25C8D7E000A37345 /* TestHelpers.swift */; };
+		AC36EC8925C9F83E00A37345 /* Analytics+PublicAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC36EC8825C9F83E00A37345 /* Analytics+PublicAPITests.swift */; };
 		ACA7727025428940005880AF /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA7726425428940005880AF /* Analytics.swift */; };
 		ACA7727125428940005880AF /* AnalyticsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA7726525428940005880AF /* AnalyticsConstants.swift */; };
 		ACA7727225428940005880AF /* AEPAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = ACA7726625428940005880AF /* AEPAnalytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -58,6 +59,7 @@
 		AC36EBF325C8D30F00A37345 /* AnalyticsMigratorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsMigratorTests.swift; sourceTree = "<group>"; };
 		AC36EC0325C8D71500A37345 /* MockDataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDataStore.swift; sourceTree = "<group>"; };
 		AC36EC0F25C8D7E000A37345 /* TestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		AC36EC8825C9F83E00A37345 /* Analytics+PublicAPITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Analytics+PublicAPITests.swift"; sourceTree = "<group>"; };
 		ACA7725A25428940005880AF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ACA7725E25428940005880AF /* TestableExtensionRuntime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestableExtensionRuntime.swift; sourceTree = "<group>"; };
 		ACA7726225428940005880AF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 		ACA7725B25428940005880AF /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				AC36EC8825C9F83E00A37345 /* Analytics+PublicAPITests.swift */,
 				AC36EBF325C8D30F00A37345 /* AnalyticsMigratorTests.swift */,
 				ACA9C437255C88EE00D722B4 /* AnalyticsTests.swift */,
 				ACA7725D25428940005880AF /* TestHelper */,
@@ -522,6 +525,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC36EC0825C8D71800A37345 /* MockDataStore.swift in Sources */,
+				AC36EC8925C9F83E00A37345 /* Analytics+PublicAPITests.swift in Sources */,
 				ACA7727C25428959005880AF /* TestableExtensionRuntime.swift in Sources */,
 				ACF87A9C25AE3D1B0032C92F /* TestUtils.swift in Sources */,
 				ACA9C443255C8A5500D722B4 /* AnalyticsTests.swift in Sources */,

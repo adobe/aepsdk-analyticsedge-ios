@@ -15,7 +15,7 @@ import Foundation
 enum AnalyticsConstants {
     static let EXTENSION_NAME = "com.adobe.module.analytics"
     static let FRIENDLY_NAME = "AnalyticsEdge"
-    static let EXTENSION_VERSION = "0.0.1"
+    static let EXTENSION_VERSION = "1.0.0-beta.3"
     static let DATASTORE_NAME = EXTENSION_NAME
 
     static let APP_STATE_FOREGROUND = "foreground"
