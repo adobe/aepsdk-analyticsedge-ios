@@ -28,6 +28,9 @@ public class AnalyticsMigrator {
     ///   - dataStore: DataStore to store persisted analytics data
     private static func migrateFromV4(dataStore: NamedCollectionDataStore) {
         Log.trace(label: LOG_TAG, "Migration started for Analytics data from v4")
+
+        let userDefaults = self.userDefaults
+
         if let aid = userDefaults.string(forKey: AnalyticsConstants.V4Migration.AID) {
             dataStore.set(key: AnalyticsConstants.DataStoreKeys.AID, value: aid)
         }
@@ -54,6 +57,8 @@ public class AnalyticsMigrator {
     ///   - dataStore: DataStore to store persisted analytics data
     private static func migrateFromV5(dataStore: NamedCollectionDataStore) {
         Log.trace(label: LOG_TAG, "Migration started for Analytics data from v5")
+
+        let userDefaults = self.userDefaults
 
         if let aid = userDefaults.string(forKey: AnalyticsConstants.V5Migration.AID) {
             dataStore.set(key: AnalyticsConstants.DataStoreKeys.AID, value: aid)
