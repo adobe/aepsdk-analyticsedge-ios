@@ -12,7 +12,7 @@
 import Foundation
 import AEPServices
 
-public class AnalyticsMigrator {
+class AnalyticsMigrator {
     private static let LOG_TAG = "AnalyticsMigrator"
 
     private static var userDefaults: UserDefaults {
