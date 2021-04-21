@@ -14,6 +14,11 @@ import UIKit
 import AEPServices
 
 class AnalyticsHelper {
+
+    private static var systemInfoService: SystemInfoService {
+        ServiceProvider.shared.systemInfoService
+    }
+
     /// The app’s current state, or that of its most active scene.
     /// - Returns: The app's current state
     static func getApplicationState() -> UIApplication.State? {
@@ -27,6 +32,17 @@ class AnalyticsHelper {
         }
         return ret
     }
+
+    /// Combines the application name, version, and version code into a formatted application identifier
+    /// - Returns: `String` formatted Application identifier
+    static func getApplicationIdentifier() -> String {
+        let applicationName = systemInfoService.getApplicationName() ?? ""
+        let applicationVersion = systemInfoService.getApplicationVersionNumber() ?? ""
+        let applicationBuildNumber = systemInfoService.getApplicationBuildNumber() ?? ""
+        // Make sure that the formatted identifier removes white space if any of the values are empty, and remove the () version wrapper if version is empty as well
+        return "\(applicationName) \(applicationVersion) (\(applicationBuildNumber))".replacingOccurrences(of: "  ", with: " ").replacingOccurrences(of: "()", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
 }
 
 extension TimeZone {

@@ -16,52 +16,58 @@ import Foundation
 
 /// Defines the public interface for the Analytics extension
 @objc public extension Analytics {
-    private static let LOG_TAG = "Analytics"
+    private static let LOG_TAG = "AnalyticsEdge"
 
     /// Clears all hits from the tracking queue and removes them from the database.
+    @available(*, deprecated)
     @objc(clearQueue)
     static func clearQueue() {
-        Log.trace(label: LOG_TAG, "clearQueue - is not currently supported with Edge")
+        Log.error(label: LOG_TAG, "clearQueue API will not be supported with Edge")
     }
 
     /// Retrieves the number of hits currently in the tracking queue
     /// - Parameters:
     ///  - completion: closure invoked with the queue size value
+    @available(*, deprecated)
     @objc(getQueueSize:)
-    static func getQueueSize(completion: @escaping (Int, AEPError) -> Void) {
-        Log.trace(label: LOG_TAG, "getQueueSize - is not currently supported with Edge")
-        completion(0, .unexpected)
+    static func getQueueSize(completion: @escaping (Int, Error?) -> Void) {
+        Log.error(label: LOG_TAG, "getQueueSize API will not be supported with Edge")
+        completion(0, AEPError.unexpected)
     }
 
     /// Forces analytics to send all queued hits regardless of current batch options
+    @available(*, deprecated)
     @objc(sendQueuedHits)
     static func sendQueuedHits() {
-        Log.trace(label: LOG_TAG, "sendQueuedHits - is not currently supported with Edge")
+        Log.error(label: LOG_TAG, "sendQueuedHits API will not be supported with Edge")
     }
 
     /// Retrieves the analytics tracking identifier.
     /// - Parameters:
     ///  - completion: closure invoked with the analytics identifier value
+    @available(*, deprecated)
     @objc(getTrackingIdentifier:)
-    static func getTrackingIdentifier(completion: @escaping (String?, AEPError) -> Void) {
-        Log.trace(label: LOG_TAG, "getTrackingIdentifier - is not currently supported with Edge")
-        completion(nil, .unexpected)
+    static func getTrackingIdentifier(completion: @escaping (String?, Error?) -> Void) {
+        Log.error(label: LOG_TAG, "getTrackingIdentifier API will not be supported with Edge")
+        completion(nil, AEPError.unexpected)
     }
 
     /// Retrieves the visitor tracking identifier.
     /// - Parameters:
     ///  - completion: closure invoked with the visitor identifier value
+    @available(*, deprecated)
     @objc(getVisitorIdentifier:)
-    static func getVisitorIdentifier(completion: @escaping (String?, AEPError) -> Void) {
-        Log.trace(label: LOG_TAG, "getVisitorIdentifier - is not currently supported with Edge")
-        completion(nil, .unexpected)
+    static func getVisitorIdentifier(completion: @escaping (String?, Error?) -> Void) {
+        Log.error(label: LOG_TAG, "getVisitorIdentifier API will not be supported with Edge")
+        completion(nil, AEPError.unexpected)
     }
 
     /// Sets the visitor tracking identifier.
     /// - Parameters:
     ///  - visitorIdentifier: new value for visitor identifier
+    @available(*, deprecated)
     @objc(setVisitorIdentifier:)
     static func setVisitorIdentifier(visitorIdentifier: String) {
-        Log.trace(label: LOG_TAG, "setVisitorIdentifier - is not currently supported with Edge")
+        Log.error(label: LOG_TAG, "setVisitorIdentifier API will not be supported with Edge")
     }
 }
