@@ -1,5 +1,8 @@
 # Adobe Experience Platform Analytics Edge Mobile Extension
 
+> **Warning**
+This extension no longer maintained. Refer to [Edge Bridge](https://github.com/adobe/aepsdk-edgebridge-ios) extension for iOS. 
+
 ## BETA
 
 AEPAnalyticsEdge is currently in beta. Use of this code is by invitation only and not otherwise supported by Adobe. Please contact your Adobe Customer Success Manager to learn more.
